@@ -1,0 +1,10 @@
+{
+  "vectorDBType": "chroma",
+  "config": {
+    "collectionName": "documents",
+    "metadata": {
+      "description": "Document collection for RAG",
+      "created": "2025-01-19T02:48:23.274Z"
+    }
+  }
+}

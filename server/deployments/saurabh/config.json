@@ -1,0 +1,9 @@
+{
+  "name": "saurabh",
+  "taskType": "sentiment",
+  "modelConfig": {
+    "batchSize": 32,
+    "maxLength": 128,
+    "temperature": 0.7
+  }
+}

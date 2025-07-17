@@ -1,0 +1,73 @@
+<svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="primaryGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0066FF;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#00C6FF;stop-opacity:1" />
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Animated background hexagon -->
+  <path 
+    d="M60 10L102.32 35V85L60 110L17.68 85V35L60 10Z" 
+    fill="url(#primaryGradient)"
+    opacity="0.1"
+    filter="url(#glow)">
+    <animate 
+      attributeName="opacity"
+      values="0.1;0.3;0.1"
+      dur="3s"
+      repeatCount="indefinite" />
+  </path>
+
+  <!-- DNA helix symbol -->
+  <g filter="url(#glow)">
+    <path 
+      d="M45 30C45 30 75 45 75 60C75 75 45 90 45 90" 
+      stroke="url(#primaryGradient)" 
+      strokeWidth="3"
+      fill="none"
+      strokeLinecap="round">
+      <animate 
+        attributeName="d" 
+        values="M45 30C45 30 75 45 75 60C75 75 45 90 45 90;M75 30C75 30 45 45 45 60C45 75 75 90 75 90;M45 30C45 30 75 45 75 60C75 75 45 90 45 90"
+        dur="3s"
+        repeatCount="indefinite"/>
+    </path>
+  </g>
+
+  <!-- Pulsing dots -->
+  <circle cx="45" cy="30" r="3" fill="#00C6FF">
+    <animate 
+      attributeName="opacity"
+      values="1;0.5;1"
+      dur="2s"
+      repeatCount="indefinite"/>
+  </circle>
+  <circle cx="75" cy="90" r="3" fill="#0066FF">
+    <animate 
+      attributeName="opacity"
+      values="0.5;1;0.5"
+      dur="2s"
+      repeatCount="indefinite"/>
+  </circle>
+
+  <!-- Text -->
+  <text 
+    x="60" 
+    y="62" 
+    fill="#FFFFFF" 
+    font-family="Arial, sans-serif" 
+    font-size="14" 
+    text-anchor="middle" 
+    font-weight="bold"
+    filter="url(#glow)">
+    AgenticMed
+  </text>
+</svg> 
