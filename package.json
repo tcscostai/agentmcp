@@ -2,7 +2,7 @@
   "name": "inferage",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://saurabhdsh.github.io/agentmcp",
+  "homepage": "https://tcscostai.github.io/agentmcp",
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
@@ -64,7 +64,7 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-    "gh-pages": "^6.3.0",
+    "gh-pages": "^6.1.1",
     "http-proxy-middleware": "^3.0.5"
   },
   "proxy": "http://localhost:3001"

@@ -16,7 +16,7 @@ A comprehensive platform for designing, deploying, and managing AI agents with a
 
 ## Live Demo
 
-Visit the live application: [https://saurabhdsh.github.io/agentmcp](https://saurabhdsh.github.io/agentmcp)
+Visit the live application: [https://tcscostai.github.io/agentmcp](https://tcscostai.github.io/agentmcp)
 
 ## Getting Started
 
@@ -29,7 +29,7 @@ Visit the live application: [https://saurabhdsh.github.io/agentmcp](https://saur
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/saurabhdsh/agentmcp.git
+git clone https://github.com/tcscostai/agentmcp.git
 cd agentmcp
 ```
 
