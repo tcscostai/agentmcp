@@ -12,14 +12,12 @@ import DesignSLMAgent from './pages/DesignSLMAgent';
 import { useState, useEffect } from 'react';
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [loading, setLoading] = useState(true);
+  // For demo purposes, bypass authentication
+  const [isAuthenticated, setIsAuthenticated] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // Check if user is authenticated
-    const authStatus = localStorage.getItem('isAuthenticated') === 'true';
-    console.log('Auth status:', authStatus);
-    setIsAuthenticated(authStatus);
+    // Skip authentication check for demo
     setLoading(false);
   }, []);
 
@@ -44,6 +42,10 @@ function App() {
                 <Navigate to="/" replace /> : 
                 <Login onAuthChange={handleAuthChange} />
             } 
+          />
+          <Route 
+            path="/test-login" 
+            element={<Login onAuthChange={handleAuthChange} />}
           />
           <Route
             element={
