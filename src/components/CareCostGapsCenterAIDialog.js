@@ -672,6 +672,304 @@ function CareCostGapsCenterAIDialog({ open, onClose }) {
   const [selectedTimelinePatient, setSelectedTimelinePatient] = useState(null);
   const [timelineView, setTimelineView] = useState('overview'); // 'overview', 'patient-detail'
   const [showProofDialog, setShowProofDialog] = useState(false);
+  const [showDavidThompsonTimeline, setShowDavidThompsonTimeline] = useState(false);
+
+  // David Thompson Administrative AI Timeline Data
+  const davidThompsonTimeline = {
+    patientId: "PT-2024-002",
+    name: "David Thompson",
+    age: 45,
+    gender: "Male",
+    primaryDiagnosis: "Chronic Back Pain",
+    secondaryDiagnosis: ["Depression", "Anxiety", "Substance Use Disorder"],
+    utilizationReviewCase: "UR-2024-001",
+    caseType: "Concurrent Review",
+    timeline: [
+      {
+        date: "2024-01-15",
+        time: "09:30",
+        step: "1. Submission of Clinical Documentation",
+        event: "Provider submits clinical documentation for MRI authorization",
+        ai: false,
+        systems: ["Epic EHR", "Availity Portal"],
+        duration: "45 minutes",
+        bottlenecks: ["Manual data entry", "Incomplete documentation", "Portal navigation issues"],
+        impact: "Delayed authorization process",
+        timeSaved: "0 min"
+      },
+      {
+        date: "2024-01-15",
+        time: "10:15",
+        step: "1. Submission of Clinical Documentation",
+        event: "AI-enhanced documentation submission with auto-completion",
+        ai: true,
+        systems: ["AI Documentation Assistant", "Epic EHR", "Availity Portal"],
+        duration: "15 minutes",
+        improvements: ["Auto-completed fields", "Real-time validation", "Smart form navigation"],
+        impact: "Reduced submission time by 67%",
+        timeSaved: "30 min"
+      },
+      {
+        date: "2024-01-15",
+        time: "11:00",
+        step: "2. Intake and Case Creation",
+        event: "Manual intake staff receives and creates UR case",
+        ai: false,
+        systems: ["Salesforce Health Cloud", "Pegasystems"],
+        duration: "30 minutes",
+        bottlenecks: ["Manual data entry", "Case categorization errors", "Duplicate case creation"],
+        impact: "Inconsistent case setup",
+        timeSaved: "0 min"
+      },
+      {
+        date: "2024-01-15",
+        time: "11:30",
+        step: "2. Intake and Case Creation",
+        event: "AI-powered automated case creation and categorization",
+        ai: true,
+        systems: ["AI Intake Assistant", "Salesforce Health Cloud", "Pegasystems"],
+        duration: "5 minutes",
+        improvements: ["Automated case creation", "Smart categorization", "Duplicate detection"],
+        impact: "Reduced intake time by 83%",
+        timeSaved: "25 min"
+      },
+      {
+        date: "2024-01-15",
+        time: "12:00",
+        step: "3. Case Routing to General Work Queue",
+        event: "Manual routing to general queue with basic categorization",
+        ai: false,
+        systems: ["GuidingCare", "CareAdvance"],
+        duration: "15 minutes",
+        bottlenecks: ["Manual queue assignment", "Inefficient distribution", "No priority scoring"],
+        impact: "Suboptimal case distribution",
+        timeSaved: "0 min"
+      },
+      {
+        date: "2024-01-15",
+        time: "12:15",
+        step: "3. Case Routing to General Work Queue",
+        event: "AI-powered intelligent routing with priority scoring",
+        ai: true,
+        systems: ["AI Routing Engine", "GuidingCare", "CareAdvance"],
+        duration: "2 minutes",
+        improvements: ["Intelligent routing", "Priority scoring", "Load balancing"],
+        impact: "Optimal case distribution and reduced wait time",
+        timeSaved: "13 min"
+      },
+      {
+        date: "2024-01-15",
+        time: "13:00",
+        step: "4. Assignment to Nurse Personal Work Queue",
+        event: "Manual assignment based on nurse availability only",
+        ai: false,
+        systems: ["Pega Workforce Intelligence", "GuidingCare"],
+        duration: "20 minutes",
+        bottlenecks: ["Limited skill matching", "No workload consideration", "Manual assignment process"],
+        impact: "Inefficient resource utilization",
+        timeSaved: "0 min"
+      },
+      {
+        date: "2024-01-15",
+        time: "13:20",
+        step: "4. Assignment to Nurse Personal Work Queue",
+        event: "AI-driven assignment considering skills, workload, and specialization",
+        ai: true,
+        systems: ["AI Assignment Engine", "Pega Workforce Intelligence", "GuidingCare"],
+        duration: "3 minutes",
+        improvements: ["Skill-based matching", "Workload balancing", "Specialization alignment"],
+        impact: "Optimal nurse assignment and faster processing",
+        timeSaved: "17 min"
+      },
+      {
+        date: "2024-01-15",
+        time: "14:00",
+        step: "5. Policy and Plan Guidelines Review",
+        event: "Manual policy lookup and plan guideline review",
+        ai: false,
+        systems: ["TriZetto Facets", "HealthEdge HealthRules Payor"],
+        duration: "25 minutes",
+        bottlenecks: ["Manual policy search", "Complex guideline interpretation", "Time-consuming research"],
+        impact: "Delayed determination process",
+        timeSaved: "0 min"
+      },
+      {
+        date: "2024-01-15",
+        time: "14:25",
+        step: "5. Policy and Plan Guidelines Review",
+        event: "AI-assisted policy lookup with automated guideline interpretation",
+        ai: true,
+        systems: ["AI Policy Assistant", "TriZetto Facets", "HealthEdge HealthRules Payor"],
+        duration: "5 minutes",
+        improvements: ["Automated policy lookup", "Smart guideline interpretation", "Real-time updates"],
+        impact: "Faster and more accurate policy review",
+        timeSaved: "20 min"
+      },
+      {
+        date: "2024-01-15",
+        time: "15:00",
+        step: "6. Access and Review Evidence-Based Guidelines",
+        event: "Manual InterQual/MCG guideline review",
+        ai: false,
+        systems: ["InterQual Clinical Review Software", "MCG CareWebQl"],
+        duration: "30 minutes",
+        bottlenecks: ["Manual guideline search", "Complex criteria interpretation", "Time-consuming analysis"],
+        impact: "Delayed clinical determination",
+        timeSaved: "0 min"
+      },
+      {
+        date: "2024-01-15",
+        time: "15:30",
+        step: "6. Access and Review Evidence-Based Guidelines",
+        event: "AI-powered guideline integration with automated criteria matching",
+        ai: true,
+        systems: ["AI Guideline Engine", "InterQual Clinical Review Software", "MCG CareWebQl"],
+        duration: "8 minutes",
+        improvements: ["Automated guideline matching", "Smart criteria interpretation", "Real-time recommendations"],
+        impact: "Faster and more accurate guideline application",
+        timeSaved: "22 min"
+      },
+      {
+        date: "2024-01-15",
+        time: "16:00",
+        step: "7. Clinical Discretion & Determination",
+        event: "Manual clinical judgment and determination process",
+        ai: false,
+        systems: ["GuidingCare", "Essette Care Management"],
+        duration: "40 minutes",
+        bottlenecks: ["Manual documentation", "Inconsistent decision making", "Time-consuming review process"],
+        impact: "Variable decision quality and delays",
+        timeSaved: "0 min"
+      },
+      {
+        date: "2024-01-15",
+        time: "16:40",
+        step: "7. Clinical Discretion & Determination",
+        event: "AI-enhanced clinical decision support with automated documentation",
+        ai: true,
+        systems: ["AI Clinical Assistant", "GuidingCare", "Essette Care Management"],
+        duration: "15 minutes",
+        improvements: ["Clinical decision support", "Automated documentation", "Consistent decision making"],
+        impact: "More consistent and evidence-based decisions",
+        timeSaved: "25 min"
+      },
+      {
+        date: "2024-01-15",
+        time: "17:00",
+        step: "8. Communication & Determination Letters",
+        event: "Manual letter generation and communication to provider",
+        ai: false,
+        systems: ["Adobe Experience Manager", "RightFax", "Availity Portal"],
+        duration: "20 minutes",
+        bottlenecks: ["Manual letter creation", "Template customization", "Communication delays"],
+        impact: "Delayed provider notification",
+        timeSaved: "0 min"
+      },
+      {
+        date: "2024-01-15",
+        time: "17:20",
+        step: "8. Communication & Determination Letters",
+        event: "AI-powered automated letter generation and communication",
+        ai: true,
+        systems: ["AI Communication Engine", "Adobe Experience Manager", "RightFax", "Availity Portal"],
+        duration: "5 minutes",
+        improvements: ["Automated letter generation", "Smart template selection", "Instant communication"],
+        impact: "Faster provider notification and improved communication",
+        timeSaved: "15 min"
+      }
+    ],
+    costAnalysis: {
+      withoutAI: {
+        totalCost: 28500,
+        breakdown: {
+          manualProcessing: 12000,
+          staffTime: 8000,
+          delays: 5000,
+          errors: 3500
+        },
+        timePerReview: "40 minutes",
+        turnaroundTime: "3 days"
+      },
+      withAI: {
+        totalCost: 8500,
+        breakdown: {
+          automatedProcessing: 3000,
+          staffTime: 2000,
+          aiInfrastructure: 2500,
+          maintenance: 1000
+        },
+        timePerReview: "15 minutes",
+        turnaroundTime: "1 day"
+      },
+      savings: 20000
+    },
+    aiInterventions: [
+      {
+        step: "1. Submission",
+        intervention: "AI Documentation Assistant",
+        description: "Automated clinical documentation with smart form completion and validation",
+        systems: ["Epic EHR", "Availity Portal"],
+        benefits: ["Reduced submission time by 67%", "Improved documentation accuracy", "Real-time validation"],
+        timeSaved: "30 min"
+      },
+      {
+        step: "2. Intake",
+        intervention: "AI Intake Assistant",
+        description: "Automated case creation and categorization with duplicate detection",
+        systems: ["Salesforce Health Cloud", "Pegasystems"],
+        benefits: ["Reduced intake time by 83%", "Eliminated duplicate cases", "Improved categorization accuracy"],
+        timeSaved: "25 min"
+      },
+      {
+        step: "3. Routing",
+        intervention: "AI Routing Engine",
+        description: "Intelligent case routing with priority scoring and load balancing",
+        systems: ["GuidingCare", "CareAdvance"],
+        benefits: ["Optimal case distribution", "Reduced wait times", "Improved resource utilization"],
+        timeSaved: "13 min"
+      },
+      {
+        step: "4. Assignment",
+        intervention: "AI Assignment Engine",
+        description: "Skill-based nurse assignment with workload balancing",
+        systems: ["Pega Workforce Intelligence", "GuidingCare"],
+        benefits: ["Optimal resource utilization", "Faster processing", "Better skill matching"],
+        timeSaved: "17 min"
+      },
+      {
+        step: "5. Policy Review",
+        intervention: "AI Policy Assistant",
+        description: "Automated policy lookup and guideline interpretation",
+        systems: ["TriZetto Facets", "HealthEdge HealthRules Payor"],
+        benefits: ["Faster policy review", "Improved accuracy", "Real-time updates"],
+        timeSaved: "20 min"
+      },
+      {
+        step: "6. Guidelines",
+        intervention: "AI Guideline Engine",
+        description: "Automated evidence-based guideline integration and criteria matching",
+        systems: ["InterQual Clinical Review Software", "MCG CareWebQl"],
+        benefits: ["Faster guideline application", "Improved accuracy", "Consistent interpretation"],
+        timeSaved: "22 min"
+      },
+      {
+        step: "7. Determination",
+        intervention: "AI Clinical Assistant",
+        description: "Clinical decision support with automated documentation",
+        systems: ["GuidingCare", "Essette Care Management"],
+        benefits: ["More consistent decisions", "Faster processing", "Improved documentation"],
+        timeSaved: "25 min"
+      },
+      {
+        step: "8. Communication",
+        intervention: "AI Communication Engine",
+        description: "Automated letter generation and communication",
+        systems: ["Adobe Experience Manager", "RightFax", "Availity Portal"],
+        benefits: ["Faster communication", "Improved accuracy", "Better provider experience"],
+        timeSaved: "15 min"
+      }
+    ]
+  };
 
   // Cost Driver Definitions with Enhanced Metrics
   const COST_DRIVERS = {
@@ -1171,6 +1469,9 @@ function CareCostGapsCenterAIDialog({ open, onClose }) {
     } else if (patientName === 'Michael Chen') {
       age = 78;
       diagnosis = 'COPD';
+    } else if (patientName === 'David Thompson' && driverId === 'administrative') {
+      age = 45;
+      diagnosis = 'Chronic Back Pain';
     } else {
       age = 45 + (i % 35);
       diagnosis = null; // Will be generated by generatePatientDetailedData
@@ -1184,10 +1485,12 @@ function CareCostGapsCenterAIDialog({ open, onClose }) {
     // Generate additional patient data
     const patientData = generatePatientDetailedData(driverId, i, patientName);
     
-    // Special totalSavings for Michael Chen
+    // Special totalSavings for Michael Chen and David Thompson
     let totalSavings = timelineEvents.filter(e => e.ai).reduce((sum, e) => sum + (e.costSaved || 0), 0);
     if (patientName === 'Michael Chen') {
       totalSavings = 25000; // Set to $25,000 as specified
+    } else if (patientName === 'David Thompson' && driverId === 'administrative') {
+      totalSavings = 20000; // Set to $20,000 as specified for administrative costs
     }
 
     patients.push({
@@ -1220,7 +1523,139 @@ function CareCostGapsCenterAIDialog({ open, onClose }) {
     const events = [];
     const baseDate = new Date('2024-01-01');
     
-    // Generate 8-12 events per patient
+    // Get patient name from the realNames array
+    const realNames = [
+      'Sarah Johnson', 'Michael Chen', 'Lisa Rodriguez', 'David Thompson', 'Jennifer Williams',
+      'Robert Davis', 'Maria Garcia', 'James Wilson', 'Patricia Brown', 'John Martinez',
+      'Linda Anderson', 'Christopher Taylor', 'Barbara Moore', 'Daniel Jackson', 'Elizabeth White',
+      'Matthew Harris', 'Susan Martin', 'Anthony Clark', 'Jessica Lewis', 'Kevin Lee',
+      'Nancy Hall', 'Steven Allen', 'Karen Young', 'Brian King', 'Betty Wright',
+      'Timothy Green', 'Helen Baker', 'Ronald Adams', 'Donna Nelson', 'Jason Carter',
+      'Carol Mitchell', 'Eric Perez', 'Deborah Roberts', 'Mark Turner', 'Ruth Phillips'
+    ];
+    const patientName = realNames[patientIndex - 1];
+    
+    // Special case for David Thompson in administrative costs
+    if (patientName === 'David Thompson' && driverId === 'administrative') {
+      // Generate administrative-specific timeline events for David Thompson
+      const adminEvents = [
+        {
+          timestamp: new Date('2024-01-15T09:30:00'),
+          event: 'Provider submits clinical documentation for MRI authorization',
+          ai: false,
+          impact: 'Delayed authorization process',
+          costSaved: 0
+        },
+        {
+          timestamp: new Date('2024-01-15T10:15:00'),
+          event: 'AI-enhanced documentation submission with auto-completion',
+          ai: true,
+          impact: 'Reduced submission time by 67%',
+          costSaved: 5000
+        },
+        {
+          timestamp: new Date('2024-01-15T11:00:00'),
+          event: 'Manual intake staff receives and creates UR case',
+          ai: false,
+          impact: 'Inconsistent case setup',
+          costSaved: 0
+        },
+        {
+          timestamp: new Date('2024-01-15T11:30:00'),
+          event: 'AI-powered automated case creation and categorization',
+          ai: true,
+          impact: 'Reduced intake time by 83%',
+          costSaved: 4000
+        },
+        {
+          timestamp: new Date('2024-01-15T12:00:00'),
+          event: 'Manual routing to general queue with basic categorization',
+          ai: false,
+          impact: 'Suboptimal case distribution',
+          costSaved: 0
+        },
+        {
+          timestamp: new Date('2024-01-15T12:15:00'),
+          event: 'AI-powered intelligent routing with priority scoring',
+          ai: true,
+          impact: 'Optimal case distribution and reduced wait time',
+          costSaved: 3000
+        },
+        {
+          timestamp: new Date('2024-01-15T13:00:00'),
+          event: 'Manual assignment based on nurse availability only',
+          ai: false,
+          impact: 'Inefficient resource utilization',
+          costSaved: 0
+        },
+        {
+          timestamp: new Date('2024-01-15T13:20:00'),
+          event: 'AI-driven assignment considering skills, workload, and specialization',
+          ai: true,
+          impact: 'Optimal nurse assignment and faster processing',
+          costSaved: 3500
+        },
+        {
+          timestamp: new Date('2024-01-15T14:00:00'),
+          event: 'Manual policy lookup and plan guideline review',
+          ai: false,
+          impact: 'Delayed determination process',
+          costSaved: 0
+        },
+        {
+          timestamp: new Date('2024-01-15T14:25:00'),
+          event: 'AI-assisted policy lookup with automated guideline interpretation',
+          ai: true,
+          impact: 'Faster and more accurate policy review',
+          costSaved: 2500
+        },
+        {
+          timestamp: new Date('2024-01-15T15:00:00'),
+          event: 'Manual InterQual/MCG guideline review',
+          ai: false,
+          impact: 'Delayed clinical determination',
+          costSaved: 0
+        },
+        {
+          timestamp: new Date('2024-01-15T15:30:00'),
+          event: 'AI-powered guideline integration with automated criteria matching',
+          ai: true,
+          impact: 'Faster and more accurate guideline application',
+          costSaved: 3000
+        },
+        {
+          timestamp: new Date('2024-01-15T16:00:00'),
+          event: 'Manual clinical judgment and determination process',
+          ai: false,
+          impact: 'Variable decision quality and delays',
+          costSaved: 0
+        },
+        {
+          timestamp: new Date('2024-01-15T16:40:00'),
+          event: 'AI-enhanced clinical decision support with automated documentation',
+          ai: true,
+          impact: 'More consistent and evidence-based decisions',
+          costSaved: 4000
+        },
+        {
+          timestamp: new Date('2024-01-15T17:00:00'),
+          event: 'Manual letter generation and communication to provider',
+          ai: false,
+          impact: 'Delayed provider notification',
+          costSaved: 0
+        },
+        {
+          timestamp: new Date('2024-01-15T17:20:00'),
+          event: 'AI-powered automated letter generation and communication',
+          ai: true,
+          impact: 'Faster provider notification and improved communication',
+          costSaved: 2000
+        }
+      ];
+      return adminEvents;
+    }
+    
+    // Generate 8-12 events per patient for other cases
     const numEvents = 8 + (patientIndex % 5);
     
     for (let i = 0; i < numEvents; i++) {
@@ -9381,7 +9816,16 @@ AdherenceAI Monitoring Team`
                       onChange={(e) => {
                         const patient = timelineData.find(p => p.id === e.target.value);
                         setSelectedTimelinePatient(patient);
-                        setTimelineView('patient-detail');
+                        
+                        // Special handling for David Thompson in Administrative Costs
+                        if (patient.name === 'David Thompson' && selectedTimelineDriver?.id === 'administrative') {
+                          setShowDavidThompsonTimeline(true);
+                          setShowDetailedTimeline(false);
+                          // Trigger timeline animation after a short delay
+                          setTimeout(() => setTimelineAnimation(true), 500);
+                        } else {
+                          setTimelineView('patient-detail');
+                        }
                       }}
                       label="Choose Patient"
                       sx={{
@@ -10182,9 +10626,401 @@ AdherenceAI Monitoring Team`
         )}
       </Dialog>
 
+      {/* David Thompson Administrative AI Timeline Dialog */}
+      <Dialog
+        open={showDavidThompsonTimeline}
+        onClose={() => setShowDavidThompsonTimeline(false)}
+        maxWidth="xl"
+        fullWidth
+        PaperProps={{
+          sx: {
+            height: '90vh',
+            borderRadius: 3,
+            background: 'linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%)',
+            overflow: 'hidden'
+          }
+        }}
+      >
+        <DialogTitle sx={{
+          background: 'linear-gradient(45deg, #795548 30%, #8d6e63 90%)',
+          color: 'white',
+          fontWeight: 700,
+          display: 'flex',
+          alignItems: 'center',
+          gap: 2,
+          p: 3
+        }}>
+          <Typography variant="h3">📋</Typography>
+          <Box>
+            <Typography variant="h4" component="div" sx={{ fontWeight: 700 }}>
+              David Thompson - Administrative AI Intervention Timeline
+            </Typography>
+            <Typography variant="subtitle1" sx={{ mt: 0.5, opacity: 0.9 }}>
+              Cost of Care Simulation • Administrative Costs • 8-Step Utilization Review Process
+            </Typography>
+          </Box>
+          <Box sx={{ display: 'flex', gap: 1 }}>
+            <Button
+              variant="outlined"
+              size="small"
+              onClick={() => {
+                setShowDavidThompsonTimeline(false);
+                setShowDetailedTimeline(true);
+              }}
+              sx={{ 
+                color: 'white', 
+                borderColor: 'white',
+                '&:hover': { borderColor: 'white', bgcolor: 'rgba(255,255,255,0.1)' }
+              }}
+            >
+              Back to Timeline
+            </Button>
+            <IconButton
+              onClick={() => setShowDavidThompsonTimeline(false)}
+              sx={{ color: 'white' }}
+            >
+              <CloseIcon />
+            </IconButton>
+          </Box>
+        </DialogTitle>
+
+        <DialogContent sx={{ p: 0, overflow: 'hidden' }}>
+          <Box sx={{ height: '100%', overflow: 'auto', p: 3 }}>
+            {/* Patient Header */}
+            <Card sx={{ p: 3, mb: 3, background: 'white', boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
+                <Avatar sx={{ 
+                  bgcolor: '#795548', 
+                  width: 80, 
+                  height: 80,
+                  fontSize: '2rem'
+                }}>
+                  {davidThompsonTimeline.name.charAt(0)}
+                </Avatar>
+                <Box sx={{ flex: 1 }}>
+                  <Typography variant="h4" fontWeight={700} color="text.primary">
+                    {davidThompsonTimeline.name}
+                  </Typography>
+                  <Typography variant="body1" color="text.secondary" sx={{ mb: 1 }}>
+                    {davidThompsonTimeline.age} years • {davidThompsonTimeline.primaryDiagnosis}
+                  </Typography>
+                  <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                    <Chip 
+                      label={`Risk Score: 85/100`} 
+                      color="error"
+                    />
+                    <Chip 
+                      label="Critical" 
+                      color="error"
+                    />
+                    <Typography variant="h5" fontWeight={700} color="success.main">
+                      ${davidThompsonTimeline.costAnalysis.savings.toLocaleString()} Saved
+                    </Typography>
+                  </Box>
+                </Box>
+              </Box>
+            </Card>
+
+            {/* Modular Sections - Compact Layout */}
+            <Grid container spacing={2}>
+              {/* AI Recommendations */}
+              <Grid item xs={12} md={4}>
+                <Card sx={{ p: 2, height: '100%', background: 'linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%)', border: '2px solid #2196f3', minHeight: 300 }}>
+                  <Typography variant="h6" fontWeight={700} sx={{ mb: 2, color: '#2196f3', display: 'flex', alignItems: 'center', gap: 1, fontSize: '1rem' }}>
+                    🤖 AI Recommendations
+                  </Typography>
+                  {davidThompsonTimeline.aiInterventions.slice(0, 3).map((intervention, index) => (
+                    <Box key={index} sx={{ mb: 1.5, p: 1.5, bgcolor: 'white', borderRadius: 1.5, border: '1px solid #e0e0e0' }}>
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0.5 }}>
+                        <Typography variant="subtitle2" fontWeight={600} color="text.primary" sx={{ fontSize: '0.875rem' }}>
+                          {intervention.intervention}
+                        </Typography>
+                        <Chip 
+                          label={index === 0 ? 'Critical' : index === 1 ? 'High' : 'Medium'} 
+                          color={index === 0 ? 'error' : index === 1 ? 'warning' : 'info'}
+                          size="small"
+                          sx={{ fontSize: '0.7rem', height: 20 }}
+                        />
+                      </Box>
+                      <Typography variant="caption" color="text.secondary" sx={{ mb: 0.5, lineHeight: 1.3 }}>
+                        {intervention.description}
+                      </Typography>
+                      <Typography variant="caption" fontWeight={600} color="success.main">
+                        Impact: {intervention.timeSaved} time saved
+                      </Typography>
+                    </Box>
+                  ))}
+                </Card>
+              </Grid>
+
+              {/* Insights */}
+              <Grid item xs={12} md={4}>
+                <Card sx={{ p: 2, height: '100%', background: 'linear-gradient(135deg, #e8f5e8 0%, #f1f8e9 100%)', border: '2px solid #4caf50', minHeight: 300 }}>
+                  <Typography variant="h6" fontWeight={700} sx={{ mb: 2, color: '#2e7d32', display: 'flex', alignItems: 'center', gap: 1, fontSize: '1rem' }}>
+                    💡 Key Insights
+                  </Typography>
+                  {[
+                    'Manual prior authorization process takes 3.2 days on average',
+                    'AI automation reduces processing time by 75%',
+                    'Administrative costs account for 15% of total healthcare spending',
+                    'Automation can save $20,000 per utilization review case'
+                  ].map((insight, index) => (
+                    <Box key={index} sx={{ mb: 1.5, p: 1.5, bgcolor: 'white', borderRadius: 1.5, border: '1px solid #e0e0e0' }}>
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0.5 }}>
+                        <Typography variant="subtitle2" fontWeight={600} color="text.primary" sx={{ fontSize: '0.875rem' }}>
+                          Insight {index + 1}
+                        </Typography>
+                        <Chip 
+                          label={index === 0 ? 'Critical' : index === 1 ? 'High' : 'Medium'} 
+                          color={index === 0 ? 'error' : index === 1 ? 'warning' : 'info'}
+                          size="small"
+                          sx={{ fontSize: '0.7rem', height: 20 }}
+                        />
+                      </Box>
+                      <Typography variant="caption" color="text.secondary" sx={{ mb: 0.5, lineHeight: 1.3 }}>
+                        {insight}
+                      </Typography>
+                      <Typography variant="caption" fontWeight={600} color="success.main">
+                        Impact: {index === 0 ? 'High processing delays' : index === 1 ? 'Efficiency improvement' : index === 2 ? 'Cost reduction opportunity' : 'Significant savings potential'}
+                      </Typography>
+                    </Box>
+                  ))}
+                </Card>
+              </Grid>
+
+              {/* Future Steps */}
+              <Grid item xs={12} md={4}>
+                <Card sx={{ p: 2, height: '100%', background: 'linear-gradient(135deg, #f3e5f5 0%, #e8eaf6 100%)', border: '2px solid #9c27b0', minHeight: 300 }}>
+                  <Typography variant="h6" fontWeight={700} sx={{ mb: 2, color: '#7b1fa2', display: 'flex', alignItems: 'center', gap: 1, fontSize: '1rem' }}>
+                    🚀 Future Steps
+                  </Typography>
+                  {[
+                    { step: 'Implement AI Documentation Assistant', priority: 'Critical', timeline: 'Immediate' },
+                    { step: 'Deploy Automated Case Routing', priority: 'High', timeline: '30 days' },
+                    { step: 'Train Staff on AI Tools', priority: 'Medium', timeline: '60 days' },
+                    { step: 'Monitor Performance Metrics', priority: 'Medium', timeline: 'Ongoing' }
+                  ].map((step, index) => (
+                    <Box key={index} sx={{ mb: 1.5, p: 1.5, bgcolor: 'white', borderRadius: 1.5, border: '1px solid #e0e0e0' }}>
+                      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0.5 }}>
+                        <Typography variant="subtitle2" fontWeight={600} color="text.primary" sx={{ fontSize: '0.875rem' }}>
+                          {step.step}
+                        </Typography>
+                        <Chip 
+                          label={step.priority} 
+                          color={step.priority === 'Critical' ? 'error' : step.priority === 'High' ? 'warning' : 'info'}
+                          size="small"
+                          sx={{ fontSize: '0.7rem', height: 20 }}
+                        />
+                      </Box>
+                      <Typography variant="caption" color="text.secondary">
+                        Timeline: {step.timeline}
+                      </Typography>
+                    </Box>
+                  ))}
+                </Card>
+              </Grid>
+
+              {/* Animated Timeline */}
+              <Grid item xs={12}>
+                <Card sx={{ p: 3, background: 'white', boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }}>
+                  <Typography variant="h6" fontWeight={700} sx={{ mb: 3, color: '#795548', display: 'flex', alignItems: 'center', gap: 1 }}>
+                    📅 AI Intervention Timeline
+                  </Typography>
+                  
+                  <Box sx={{ position: 'relative' }}>
+                    {/* Timeline Line */}
+                    <Box sx={{
+                      position: 'absolute',
+                      left: 20,
+                      top: 0,
+                      bottom: 0,
+                      width: 3,
+                      background: `linear-gradient(180deg, #795548, #4caf50)`,
+                      borderRadius: 1
+                    }} />
+                    
+                    {/* Timeline Events */}
+                    <Box sx={{ pl: 6 }}>
+                      {davidThompsonTimeline.timeline.map((event, eventIndex) => (
+                        <Box key={eventIndex} sx={{ 
+                          display: 'flex', 
+                          alignItems: 'flex-start', 
+                          mb: 3,
+                          position: 'relative'
+                        }}>
+                          {/* Timeline Dot */}
+                          <Box sx={{
+                            width: 40,
+                            height: 40,
+                            borderRadius: '50%',
+                            background: event.ai 
+                              ? 'linear-gradient(45deg, #4caf50, #66bb6a)' 
+                              : 'linear-gradient(45deg, #757575, #9e9e9e)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: 'white',
+                            fontSize: 16,
+                            fontWeight: 600,
+                            zIndex: 2,
+                            boxShadow: event.ai 
+                              ? '0 4px 12px rgba(76, 175, 80, 0.3)' 
+                              : '0 4px 12px rgba(117, 117, 117, 0.3)',
+                            animation: `fadeInUp 0.5s ease-out ${eventIndex * 0.1}s both`
+                          }}>
+                            {event.ai ? '🤖' : '📋'}
+                          </Box>
+                          
+                          {/* Event Card */}
+                          <Box sx={{ ml: 2, flex: 1 }}>
+                            <Card sx={{ 
+                              p: 2,
+                              background: event.ai 
+                                ? 'linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%)' 
+                                : 'linear-gradient(135deg, #f5f5f5 0%, #eeeeee 100%)',
+                              border: `2px solid ${event.ai ? '#4caf50' : '#757575'}`,
+                              position: 'relative',
+                              overflow: 'hidden',
+                              animation: `slideInRight 0.5s ease-out ${eventIndex * 0.1}s both`
+                            }}>
+                              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1 }}>
+                                <Typography variant="subtitle2" fontWeight={600} color={event.ai ? 'success.main' : 'text.secondary'}>
+                                  {event.date} • {event.time}
+                                </Typography>
+                                <Chip 
+                                  label={event.ai ? 'AI Intervention' : 'Standard Process'} 
+                                  size="small" 
+                                  color={event.ai ? 'success' : 'default'}
+                                  variant="filled"
+                                  sx={{ fontSize: '0.75rem' }}
+                                />
+                              </Box>
+                              <Typography variant="body1" fontWeight={600} sx={{ mb: 1, color: 'text.primary' }}>
+                                {event.step}
+                              </Typography>
+                              <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                                {event.event}
+                              </Typography>
+                              {event.ai && (
+                                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                  <Typography variant="body2" color="text.secondary">
+                                    Agent: {event.step.split(' ')[1]}-Agent-{(eventIndex + 1).toString().padStart(3, '0')}
+                                  </Typography>
+                                  <Typography variant="h6" fontWeight={700} color="success.main">
+                                    {event.timeSaved}
+                                  </Typography>
+                                </Box>
+                              )}
+                              
+                              {/* Systems Used */}
+                              <Box sx={{ mt: 1 }}>
+                                <Typography variant="caption" color="text.secondary" fontWeight={600}>
+                                  Systems: {event.systems.join(', ')}
+                                </Typography>
+                              </Box>
+                            </Card>
+                          </Box>
+                        </Box>
+                      ))}
+                    </Box>
+                  </Box>
+                </Card>
+              </Grid>
+
+              {/* Outcome Metrics for David Thompson */}
+              <Grid item xs={12}>
+                <Card sx={{ p: 3, background: 'linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%)', border: '2px solid #2196f3', boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+                    <Typography variant="h6" fontWeight={700} sx={{ color: '#2196f3', display: 'flex', alignItems: 'center', gap: 1 }}>
+                      ⚡ Manual vs Agentic Automation
+                    </Typography>
+                    <Box sx={{ textAlign: 'right' }}>
+                      <Typography variant="h5" fontWeight={700} color="success.main">
+                        2.5 hrs
+                      </Typography>
+                      <Typography variant="caption" color="text.secondary">
+                        Time Saved
+                      </Typography>
+                    </Box>
+                  </Box>
+                  <Grid container spacing={1.5}>
+                    {davidThompsonTimeline.aiInterventions.map((intervention, idx) => (
+                      <Grid item xs={12} sm={6} md={4} lg={3} key={intervention.step}>
+                        <Card sx={{
+                          p: 1.5,
+                          bgcolor: '#e3f2fd',
+                          border: '1px solid #2196f3',
+                          background: 'linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%)',
+                          position: 'relative',
+                          overflow: 'hidden',
+                          minHeight: 140,
+                          '&::before': {
+                            content: '""',
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            height: 2,
+                            background: 'linear-gradient(90deg, #2196f3, #4caf50, #ff9800)',
+                            animation: `${shimmer} 2s ease-in-out infinite`
+                          }
+                        }}>
+                          <Box sx={{ display: 'flex', alignItems: 'center', mb: 0.5 }}>
+                            <Box sx={{
+                              width: 28,
+                              height: 28,
+                              borderRadius: '50%',
+                              bgcolor: '#4caf50',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              mr: 1
+                            }}>
+                              <Typography variant="body2" color="white" fontWeight={700}>
+                                🤖
+                              </Typography>
+                            </Box>
+                            <Typography variant="subtitle2" fontWeight={600} color="#1a237e" sx={{ fontSize: '0.875rem' }}>
+                              {intervention.intervention}
+                            </Typography>
+                          </Box>
+                          <Typography variant="caption" color="#37383b" sx={{ 
+                            display: '-webkit-box',
+                            WebkitLineClamp: 2,
+                            WebkitBoxOrient: 'vertical',
+                            overflow: 'hidden',
+                            mb: 0.5,
+                            lineHeight: 1.2
+                          }}>
+                            {intervention.description}
+                          </Typography>
+                          <Typography variant="h6" color="success.main" fontWeight={700} sx={{ mb: 0.5 }}>
+                            {intervention.timeSaved || "25 min"}
+                          </Typography>
+                          <Chip 
+                            label="Agentic Automation" 
+                            color="primary" 
+                            size="small" 
+                            sx={{ 
+                              fontWeight: 600, 
+                              fontSize: '0.7rem',
+                              height: 20
+                            }}
+                          />
+                        </Card>
+                      </Grid>
+                    ))}
+                  </Grid>
+                </Card>
+              </Grid>
+            </Grid>
+          </Box>
+        </DialogContent>
+      </Dialog>
+
       {/* End of Dialogs */}
     </Dialog>
   );
 }
 
-export default CareCostGapsCenterAIDialog; 
+export default CareCostGapsCenterAIDialog;
