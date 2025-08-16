@@ -78,6 +78,7 @@ import {
   LocalHospital as HospitalIcon,
   PhoneAndroid as MobileIcon,
   AttachMoney as AttachMoneyIcon,
+  Gavel as GavelIcon,
 } from '@mui/icons-material';
 import RequirementsAnalyzerDialog from '../components/RequirementsAnalyzerDialog';
 import IntegrationTestDesignerDialog from '../components/IntegrationTestDesignerDialog';
@@ -96,6 +97,7 @@ import ProviderOutreachDialog from '../components/ProviderOutreachDialog';
 import MobileDeveloperAssistDialog from '../components/MobileDeveloperAssistDialog';
 import ClaimCenterAIDialog from '../components/ClaimCenterAIDialog';
 import CareCostGapsCenterAIDialog from '../components/CareCostGapsCenterAIDialog';
+import LegalAndCounselAgentDialog from '../components/LegalAndCounselAgentDialog';
 import {
   Psychology,
   Groups,
@@ -268,6 +270,7 @@ function DesignAgent() {
   const [mobileDeveloperAssistOpen, setMobileDeveloperAssistOpen] = useState(false);
   const [claimCenterAIOpen, setClaimCenterAIOpen] = useState(false);
   const [careCostGapsCenterAIOpen, setCareCostGapsCenterAIOpen] = useState(false);
+  const [legalAndCounselAgentOpen, setLegalAndCounselAgentOpen] = useState(false);
 
   const handleAgentClick = (agentType) => {
     console.log('Agent clicked:', agentType);
@@ -364,6 +367,9 @@ function DesignAgent() {
         break;
       case 'care_cost_gaps_center':
         setCareCostGapsCenterAIOpen(true);
+        break;
+      case 'legal_counsel':
+        setLegalAndCounselAgentOpen(true);
         break;
       default:
         console.log('Unknown agent type:', agentType);
@@ -576,6 +582,21 @@ function DesignAgent() {
             "Documentation Tracking"
           ],
           type: "provider_outreach"
+        },
+        {
+          id: "legal_counsel",
+          name: "Legal and Counsel Agent",
+          icon: <GavelIcon />,
+          description: "AI-powered legal compliance and regulatory guidance workflow",
+          features: [
+            "Regulatory Compliance",
+            "Legal Document Review",
+            "Risk Assessment",
+            "Policy Guidance",
+            "Compliance Monitoring"
+          ],
+          status: "beta",
+          type: "legal_counsel"
         }
       ]
     },
@@ -2168,6 +2189,11 @@ function DesignAgent() {
       <CareCostGapsCenterAIDialog
         open={careCostGapsCenterAIOpen}
         onClose={() => setCareCostGapsCenterAIOpen(false)}
+      />
+
+      <LegalAndCounselAgentDialog
+        open={legalAndCounselAgentOpen}
+        onClose={() => setLegalAndCounselAgentOpen(false)}
       />
     </Box>
   );
