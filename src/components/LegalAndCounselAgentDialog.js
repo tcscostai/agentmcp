@@ -26,6 +26,7 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  Tooltip,
 } from '@mui/material';
 import {
   Gavel as GavelIcon,
@@ -42,6 +43,7 @@ import {
   Settings as SettingsIcon,
   Close as CloseIcon,
   CloudUpload as UploadIcon,
+  Download as DownloadIcon,
 } from '@mui/icons-material';
 
 // Mock data for legal and counsel analysis
@@ -129,6 +131,11 @@ const INVOICE_DATA = {
       mismatchDescription: 'Partner rate exceeds contracted rate by $50/hour',
       agentAnalysis: 'AI Agent detected 3 compliance violations',
       matchInvoice: 'INV-2024-015',
+      attachments: [
+        { name: 'Invoice_2024-001.pdf', type: 'PDF', size: '2.3 MB', url: '#invoice-001' },
+        { name: 'Supporting_Docs_001.zip', type: 'ZIP', size: '15.7 MB', url: '#docs-001' },
+        { name: 'Timekeeper_Logs_001.xlsx', type: 'Excel', size: '1.2 MB', url: '#logs-001' }
+      ],
       timekeepers: [
         { name: 'John Smith', role: 'Partner', hours: 45, rate: 850, total: 38250 },
         { name: 'Sarah Johnson', role: 'Associate', hours: 32, rate: 650, total: 20800 },
@@ -160,6 +167,11 @@ const INVOICE_DATA = {
       mismatchDescription: 'None',
       agentAnalysis: 'AI Agent verified compliance with all policies',
       matchInvoice: 'INV-2024-018',
+      attachments: [
+        { name: 'Invoice_2024-002.pdf', type: 'PDF', size: '1.8 MB', url: '#invoice-002' },
+        { name: 'Patent_Documents_002.pdf', type: 'PDF', size: '8.5 MB', url: '#patent-002' },
+        { name: 'Court_Filings_002.pdf', type: 'PDF', size: '3.2 MB', url: '#court-002' }
+      ],
       timekeepers: [
         { name: 'Lisa Chen', role: 'Partner', hours: 38, rate: 800, total: 30400 },
         { name: 'David Wilson', role: 'Associate', hours: 42, rate: 600, total: 25200 },
@@ -191,6 +203,11 @@ const INVOICE_DATA = {
       mismatchDescription: 'Weekend billing detected, missing UTBMS codes',
       agentAnalysis: 'AI Agent flagged 5 critical compliance issues',
       matchInvoice: 'INV-2024-022',
+      attachments: [
+        { name: 'Invoice_2024-003.pdf', type: 'PDF', size: '2.1 MB', url: '#invoice-003' },
+        { name: 'Employment_Records_003.pdf', type: 'PDF', size: '12.3 MB', url: '#records-003' },
+        { name: 'Policy_Violations_003.docx', type: 'Word', size: '856 KB', url: '#violations-003' }
+      ],
       timekeepers: [
         { name: 'Robert Martinez', role: 'Partner', hours: 52, rate: 875, total: 45500 },
         { name: 'Jennifer Lee', role: 'Associate', hours: 48, rate: 675, total: 32400 }
@@ -218,6 +235,11 @@ const INVOICE_DATA = {
       mismatchDescription: 'None',
       agentAnalysis: 'AI Agent verified all charges are within policy',
       matchInvoice: 'INV-2024-025',
+      attachments: [
+        { name: 'Invoice_2024-004.pdf', type: 'PDF', size: '1.5 MB', url: '#invoice-004' },
+        { name: 'Trademark_Application_004.pdf', type: 'PDF', size: '4.2 MB', url: '#trademark-004' },
+        { name: 'USPTO_Correspondence_004.pdf', type: 'PDF', size: '2.8 MB', url: '#uspto-004' }
+      ],
       timekeepers: [
         { name: 'Michael Chang', role: 'Partner', hours: 25, rate: 800, total: 20000 },
         { name: 'Amanda Foster', role: 'Associate', hours: 40, rate: 625, total: 25000 }
@@ -244,6 +266,11 @@ const INVOICE_DATA = {
       mismatchDescription: 'Associate rate exceeds 2024 contracted rate by $25',
       agentAnalysis: 'AI Agent detected rate violations and missing receipts',
       matchInvoice: 'INV-2024-028',
+      attachments: [
+        { name: 'Invoice_2024-005.pdf', type: 'PDF', size: '2.7 MB', url: '#invoice-005' },
+        { name: 'EPA_Compliance_Report_005.pdf', type: 'PDF', size: '18.9 MB', url: '#epa-005' },
+        { name: 'Environmental_Testing_005.pdf', type: 'PDF', size: '6.4 MB', url: '#testing-005' }
+      ],
       timekeepers: [
         { name: 'Sarah Thompson', role: 'Partner', hours: 35, rate: 850, total: 29750 },
         { name: 'James Wilson', role: 'Associate', hours: 45, rate: 675, total: 30375 },
@@ -271,6 +298,11 @@ const INVOICE_DATA = {
       mismatchDescription: 'None',
       agentAnalysis: 'AI Agent verified compliance with tax law policies',
       matchInvoice: 'INV-2024-031',
+      attachments: [
+        { name: 'Invoice_2024-006.pdf', type: 'PDF', size: '2.9 MB', url: '#invoice-006' },
+        { name: 'Tax_Returns_006.pdf', type: 'PDF', size: '25.3 MB', url: '#tax-006' },
+        { name: 'IRS_Correspondence_006.pdf', type: 'PDF', size: '8.7 MB', url: '#irs-006' }
+      ],
       timekeepers: [
         { name: 'David Kim', role: 'Partner', hours: 60, rate: 900, total: 54000 },
         { name: 'Rachel Green', role: 'Senior Associate', hours: 55, rate: 750, total: 41250 },
@@ -298,6 +330,11 @@ const INVOICE_DATA = {
       mismatchDescription: 'Travel expenses missing receipts, rates within range',
       agentAnalysis: 'AI Agent flagged missing receipts and documentation gaps',
       matchInvoice: 'INV-2024-034',
+      attachments: [
+        { name: 'Invoice_2024-007.pdf', type: 'PDF', size: '2.1 MB', url: '#invoice-007' },
+        { name: 'Property_Documents_007.pdf', type: 'PDF', size: '32.1 MB', url: '#property-007' },
+        { name: 'Title_Search_007.pdf', type: 'PDF', size: '5.6 MB', url: '#title-007' }
+      ],
       timekeepers: [
         { name: 'Patricia Brown', role: 'Partner', hours: 30, rate: 800, total: 24000 },
         { name: 'Kevin Johnson', role: 'Associate', hours: 50, rate: 650, total: 32500 },
@@ -326,6 +363,11 @@ const INVOICE_DATA = {
       mismatchDescription: 'None',
       agentAnalysis: 'AI Agent verified HIPAA compliance documentation',
       matchInvoice: 'INV-2024-037',
+      attachments: [
+        { name: 'Invoice_2024-008.pdf', type: 'PDF', size: '2.4 MB', url: '#invoice-008' },
+        { name: 'HIPAA_Audit_Report_008.pdf', type: 'PDF', size: '14.7 MB', url: '#hipaa-008' },
+        { name: 'Compliance_Checklist_008.xlsx', type: 'Excel', size: '2.1 MB', url: '#checklist-008' }
+      ],
       timekeepers: [
         { name: 'Dr. Susan Miller', role: 'Partner', hours: 40, rate: 850, total: 34000 },
         { name: 'Alex Turner', role: 'Associate', hours: 55, rate: 650, total: 35750 },
@@ -349,400 +391,29 @@ const INVOICE_DATA = {
       status: 'Under Review',
       riskScore: 7.8,
       anomalies: 4,
-      remarks: 'High-value invoice with multiple compliance issues',
-      mismatchDescription: 'Partner rate exceeds cap, missing UTBMS codes, weekend billing',
-      agentAnalysis: 'AI Agent detected 4 critical violations requiring immediate attention',
+      remarks: 'Complex securities investigation, high-value work',
+      mismatchDescription: 'Weekend and holiday billing detected',
+      agentAnalysis: 'AI Agent flagged billing policy violations',
       matchInvoice: 'INV-2024-040',
+      attachments: [
+        { name: 'Invoice_2024-009.pdf', type: 'PDF', size: '3.2 MB', url: '#invoice-009' },
+        { name: 'SEC_Investigation_009.pdf', type: 'PDF', size: '45.8 MB', url: '#sec-009' },
+        { name: 'Financial_Records_009.xlsx', type: 'Excel', size: '8.9 MB', url: '#financial-009' }
+      ],
       timekeepers: [
-        { name: 'Richard Davis', role: 'Partner', hours: 70, rate: 950, total: 66500 },
-        { name: 'Emily Chen', role: 'Senior Associate', hours: 65, rate: 800, total: 52000 },
-        { name: 'Mark Wilson', role: 'Associate', hours: 60, rate: 700, total: 42000 },
-        { name: 'Lisa Park', role: 'Paralegal', hours: 45, rate: 400, total: 18000 }
+        { name: 'Mark Stevens', role: 'Partner', hours: 65, rate: 950, total: 61750 },
+        { name: 'Lisa Wang', role: 'Senior Associate', hours: 58, rate: 775, total: 44950 },
+        { name: 'Chris Rodriguez', role: 'Associate', hours: 52, rate: 675, total: 35100 }
       ],
       expenses: [
-        { description: 'Expert Witness', amount: 11000, receipt: true }
+        { description: 'Financial Analysis Software', amount: 47200, receipt: true },
+        { description: 'Expert Witness Fees', amount: 0, receipt: true }
       ],
       utbmsCodes: [
         { task: 'L1300', activity: 'A1300', expense: 'E1300', description: 'Securities Law' }
       ]
-    },
-    {
-      id: 'INV-2024-010',
-      firm: 'Immigration Law Group',
-      matter: 'Visa Application - Tech Corp',
-      invoiceNumber: '2024-010',
-      date: '2024-03-06',
-      dateReceived: '2024-03-07',
-      total: 45000,
-      status: 'Approved',
-      riskScore: 2.0,
-      anomalies: 0,
-      remarks: 'Standard immigration work, compliant',
-      mismatchDescription: 'None',
-      agentAnalysis: 'AI Agent verified all charges and documentation',
-      matchInvoice: 'INV-2024-043',
-      timekeepers: [
-        { name: 'Carlos Rodriguez', role: 'Partner', hours: 20, rate: 800, total: 16000 },
-        { name: 'Ana Martinez', role: 'Associate', hours: 30, rate: 600, total: 18000 }
-      ],
-      expenses: [
-        { description: 'USCIS Filing Fees', amount: 0, receipt: true }
-      ],
-      utbmsCodes: [
-        { task: 'L1400', activity: 'A1400', expense: 'E1400', description: 'Immigration Law' }
-      ]
-    },
-    {
-      id: 'INV-2024-011',
-      firm: 'Family Law Associates',
-      matter: 'Divorce Settlement - Family Corp',
-      invoiceNumber: '2024-011',
-      date: '2024-03-05',
-      dateReceived: '2024-03-06',
-      total: 56000,
-      status: 'Under Review',
-      riskScore: 4.2,
-      anomalies: 1,
-      remarks: 'Minor documentation issue detected',
-      mismatchDescription: 'Missing narrative for paralegal work',
-      agentAnalysis: 'AI Agent flagged insufficient documentation for paralegal hours',
-      matchInvoice: 'INV-2024-046',
-      timekeepers: [
-        { name: 'Jennifer White', role: 'Partner', hours: 25, rate: 800, total: 20000 },
-        { name: 'Robert Johnson', role: 'Associate', hours: 40, rate: 650, total: 26000 },
-        { name: 'Sarah Davis', role: 'Paralegal', hours: 20, rate: 100, total: 2000 }
-      ],
-      expenses: [
-        { description: 'Court Filing', amount: 0, receipt: true }
-      ],
-      utbmsCodes: [
-        { task: 'L1500', activity: 'A1500', expense: 'E1500', description: 'Family Law' }
-      ]
-    },
-    {
-      id: 'INV-2024-012',
-      firm: 'Criminal Defense Law',
-      matter: 'White Collar Crime - Corp',
-      invoiceNumber: '2024-012',
-      date: '2024-03-04',
-      dateReceived: '2024-03-05',
-      total: 145000,
-      status: 'Under Review',
-      riskScore: 6.1,
-      anomalies: 3,
-      remarks: 'Complex criminal case with compliance issues',
-      mismatchDescription: 'Weekend billing detected, missing UTBMS codes, rate discrepancies',
-      agentAnalysis: 'AI Agent detected 3 violations requiring clarification',
-      matchInvoice: 'INV-2024-049',
-      timekeepers: [
-        { name: 'Michael Brown', role: 'Partner', hours: 55, rate: 900, total: 49500 },
-        { name: 'Lisa Anderson', role: 'Senior Associate', hours: 60, rate: 750, total: 45000 },
-        { name: 'David Wilson', role: 'Associate', hours: 50, rate: 650, total: 32500 },
-        { name: 'Karen Smith', role: 'Paralegal', hours: 40, rate: 350, total: 14000 }
-      ],
-      expenses: [
-        { description: 'Expert Witness', amount: 4000, receipt: true }
-      ],
-      utbmsCodes: [
-        { task: 'L1600', activity: 'A1600', expense: 'E1600', description: 'Criminal Law' }
-      ]
-    },
-    {
-      id: 'INV-2024-013',
-      firm: 'Bankruptcy Law Partners',
-      matter: 'Chapter 11 - Bankrupt Corp',
-      invoiceNumber: '2024-013',
-      date: '2024-03-03',
-      dateReceived: '2024-03-04',
-      total: 89000,
-      status: 'Approved',
-      riskScore: 2.5,
-      anomalies: 0,
-      remarks: 'Bankruptcy work, properly documented',
-      mismatchDescription: 'None',
-      agentAnalysis: 'AI Agent verified compliance with bankruptcy policies',
-      matchInvoice: 'INV-2024-052',
-      timekeepers: [
-        { name: 'Thomas Lee', role: 'Partner', hours: 45, rate: 850, total: 38250 },
-        { name: 'Amanda Johnson', role: 'Associate', hours: 55, rate: 650, total: 35750 },
-        { name: 'James Wilson', role: 'Paralegal', hours: 50, rate: 300, total: 15000 }
-      ],
-      expenses: [
-        { description: 'Court Filing Fees', amount: 0, receipt: true }
-      ],
-      utbmsCodes: [
-        { task: 'L1700', activity: 'A1700', expense: 'E1700', description: 'Bankruptcy Law' }
-      ]
-    },
-    {
-      id: 'INV-2024-014',
-      firm: 'Labor Law Associates',
-      matter: 'Union Negotiation - Labor Corp',
-      invoiceNumber: '2024-014',
-      date: '2024-03-02',
-      dateReceived: '2024-03-03',
-      total: 67000,
-      status: 'Under Review',
-      riskScore: 5.8,
-      anomalies: 2,
-      remarks: 'Labor law work with minor issues',
-      mismatchDescription: 'Missing receipts for travel expenses, rates within range',
-      agentAnalysis: 'AI Agent flagged missing documentation for expenses',
-      matchInvoice: 'INV-2024-055',
-      timekeepers: [
-        { name: 'Robert Martinez', role: 'Partner', hours: 35, rate: 800, total: 28000 },
-        { name: 'Jennifer Lee', role: 'Associate', hours: 45, rate: 650, total: 29250 },
-        { name: 'Mike Davis', role: 'Paralegal', hours: 30, rate: 325, total: 9750 }
-      ],
-      expenses: [
-        { description: 'Travel - Union Meeting', amount: 0, receipt: false }
-      ],
-      utbmsCodes: [
-        { task: 'L1800', activity: 'A1800', expense: 'E1800', description: 'Labor Law' }
-      ]
-    },
-    {
-      id: 'INV-2024-015',
-      firm: 'Patent Law Group',
-      matter: 'Patent Application - Tech Corp',
-      invoiceNumber: '2024-015',
-      date: '2024-03-01',
-      dateReceived: '2024-03-02',
-      total: 78000,
-      status: 'Approved',
-      riskScore: 2.1,
-      anomalies: 0,
-      remarks: 'Patent work, properly documented',
-      mismatchDescription: 'None',
-      agentAnalysis: 'AI Agent verified all charges and documentation',
-      matchInvoice: 'INV-2024-058',
-      timekeepers: [
-        { name: 'Dr. Sarah Chen', role: 'Partner', hours: 40, rate: 850, total: 34000 },
-        { name: 'David Kim', role: 'Associate', hours: 50, rate: 650, total: 32500 },
-        { name: 'Lisa Park', role: 'Paralegal', hours: 30, rate: 350, total: 10500 }
-      ],
-      expenses: [
-        { description: 'USPTO Filing', amount: 1000, receipt: true }
-      ],
-      utbmsCodes: [
-        { task: 'L1900', activity: 'A1900', expense: 'E1900', description: 'Patent Law' }
-      ]
-    },
-    {
-      id: 'INV-2024-016',
-      firm: 'Antitrust Law Partners',
-      matter: 'Merger Review - Merger Corp',
-      invoiceNumber: '2024-016',
-      date: '2024-02-29',
-      dateReceived: '2024-03-01',
-      total: 156000,
-      status: 'Under Review',
-      riskScore: 7.5,
-      anomalies: 4,
-      remarks: 'Complex antitrust work with compliance issues',
-      mismatchDescription: 'Partner rate exceeds cap, missing UTBMS codes, weekend billing',
-      agentAnalysis: 'AI Agent detected 4 critical violations',
-      matchInvoice: 'INV-2024-061',
-      timekeepers: [
-        { name: 'Richard Wilson', role: 'Partner', hours: 60, rate: 950, total: 57000 },
-        { name: 'Emily Brown', role: 'Senior Associate', hours: 65, rate: 800, total: 52000 },
-        { name: 'Mark Johnson', role: 'Associate', hours: 55, rate: 700, total: 38500 },
-        { name: 'Karen Davis', role: 'Paralegal', hours: 40, rate: 400, total: 16000 }
-      ],
-      expenses: [
-        { description: 'Economic Analysis', amount: 7500, receipt: true }
-      ],
-      utbmsCodes: [
-        { task: 'L2000', activity: 'A2000', expense: 'E2000', description: 'Antitrust Law' }
-      ]
-    },
-    {
-      id: 'INV-2024-017',
-      firm: 'International Law Associates',
-      matter: 'Cross-border Transaction - Global Corp',
-      invoiceNumber: '2024-017',
-      date: '2024-02-28',
-      dateReceived: '2024-02-29',
-      total: 89000,
-      status: 'Approved',
-      riskScore: 2.8,
-      anomalies: 0,
-      remarks: 'International law work, properly documented',
-      mismatchDescription: 'None',
-      agentAnalysis: 'AI Agent verified compliance with international law policies',
-      matchInvoice: 'INV-2024-064',
-      timekeepers: [
-        { name: 'Maria Garcia', role: 'Partner', hours: 45, rate: 850, total: 38250 },
-        { name: 'Carlos Rodriguez', role: 'Associate', hours: 55, rate: 650, total: 35750 },
-        { name: 'Ana Martinez', role: 'Paralegal', hours: 30, rate: 350, total: 10500 }
-      ],
-      expenses: [
-        { description: 'Translation Services', amount: 4500, receipt: true }
-      ],
-      utbmsCodes: [
-        { task: 'L2100', activity: 'A2100', expense: 'E2100', description: 'International Law' }
-      ]
-    },
-    {
-      id: 'INV-2024-018',
-      firm: 'Energy Law Group',
-      matter: 'Oil & Gas Regulation - Energy Corp',
-      invoiceNumber: '2024-018',
-      date: '2024-02-27',
-      dateReceived: '2024-02-28',
-      total: 112000,
-      status: 'Under Review',
-      riskScore: 6.3,
-      anomalies: 3,
-      remarks: 'Energy law work with compliance issues',
-      mismatchDescription: 'Missing UTBMS codes, rate discrepancies, weekend billing',
-      agentAnalysis: 'AI Agent detected 3 violations requiring attention',
-      matchInvoice: 'INV-2024-067',
-      timekeepers: [
-        { name: 'Dr. James Wilson', role: 'Partner', hours: 50, rate: 900, total: 45000 },
-        { name: 'Sarah Thompson', role: 'Senior Associate', hours: 60, rate: 750, total: 45000 },
-        { name: 'Mike Davis', role: 'Associate', hours: 40, rate: 650, total: 26000 }
-      ],
-      expenses: [
-        { description: 'Environmental Assessment', amount: 4000, receipt: true }
-      ],
-      utbmsCodes: [
-        { task: 'L2200', activity: 'A2200', expense: 'E2200', description: 'Energy Law' }
-      ]
-    },
-    {
-      id: 'INV-2024-019',
-      firm: 'Media Law Partners',
-      matter: 'Copyright Infringement - Media Corp',
-      invoiceNumber: '2024-019',
-      date: '2024-02-26',
-      dateReceived: '2024-02-27',
-      total: 67000,
-      status: 'Approved',
-      riskScore: 2.2,
-      anomalies: 0,
-      remarks: 'Media law work, properly documented',
-      mismatchDescription: 'None',
-      agentAnalysis: 'AI Agent verified all charges and documentation',
-      matchInvoice: 'INV-2024-070',
-      timekeepers: [
-        { name: 'Jennifer White', role: 'Partner', hours: 35, rate: 800, total: 20000 },
-        { name: 'Robert Johnson', role: 'Associate', hours: 45, rate: 650, total: 29250 },
-        { name: 'Sarah Davis', role: 'Paralegal', hours: 30, rate: 325, total: 9750 }
-      ],
-      expenses: [
-        { description: 'Copyright Search', amount: 0, receipt: true }
-      ],
-      utbmsCodes: [
-        { task: 'L2300', activity: 'A2300', expense: 'E2300', description: 'Media Law' }
-      ]
-    },
-    {
-      id: 'INV-2024-020',
-      firm: 'Sports Law Associates',
-      matter: 'Contract Negotiation - Sports Corp',
-      invoiceNumber: '2024-020',
-      date: '2024-02-25',
-      dateReceived: '2024-02-26',
-      total: 45000,
-      status: 'Under Review',
-      riskScore: 4.8,
-      anomalies: 2,
-      remarks: 'Sports law work with minor issues',
-      mismatchDescription: 'Missing narratives for some time entries, rates within range',
-      agentAnalysis: 'AI Agent flagged insufficient documentation for time entries',
-      matchInvoice: 'INV-2024-073',
-      timekeepers: [
-        { name: 'Michael Brown', role: 'Partner', hours: 25, rate: 800, total: 20000 },
-        { name: 'Lisa Anderson', role: 'Associate', hours: 35, rate: 650, total: 22750 },
-        { name: 'David Wilson', role: 'Paralegal', hours: 20, rate: 325, total: 6500 }
-      ],
-      expenses: [
-        { description: 'Contract Review', amount: 0, receipt: true }
-      ],
-      utbmsCodes: [
-        { task: 'L2400', activity: 'A2400', expense: 'E2400', description: 'Sports Law' }
-      ]
-    },
-    {
-      id: 'INV-2024-021',
-      firm: 'Aviation Law Group',
-      matter: 'FAA Compliance - Aviation Corp',
-      invoiceNumber: '2024-021',
-      date: '2024-02-24',
-      dateReceived: '2024-02-25',
-      total: 89000,
-      status: 'Approved',
-      riskScore: 2.4,
-      anomalies: 0,
-      remarks: 'Aviation law work, properly documented',
-      mismatchDescription: 'None',
-      agentAnalysis: 'AI Agent verified compliance with aviation law policies',
-      matchInvoice: 'INV-2024-076',
-      timekeepers: [
-        { name: 'Captain John Smith', role: 'Partner', hours: 45, rate: 850, total: 38250 },
-        { name: 'Sarah Johnson', role: 'Associate', hours: 55, rate: 650, total: 35750 },
-        { name: 'Mike Davis', role: 'Paralegal', hours: 40, rate: 350, total: 14000 }
-      ],
-      expenses: [
-        { description: 'FAA Filing', amount: 1000, receipt: true }
-      ],
-      utbmsCodes: [
-        { task: 'L2500', activity: 'A2500', expense: 'E2500', description: 'Aviation Law' }
-      ]
-    },
-    {
-      id: 'INV-2024-022',
-      firm: 'Maritime Law Partners',
-      matter: 'Shipping Dispute - Maritime Corp',
-      invoiceNumber: '2024-022',
-      date: '2024-02-23',
-      dateReceived: '2024-02-24',
-      total: 123000,
-      status: 'Under Review',
-      riskScore: 6.8,
-      anomalies: 3,
-      remarks: 'Maritime law work with compliance issues',
-      mismatchDescription: 'Weekend billing detected, missing UTBMS codes, rate discrepancies',
-      agentAnalysis: 'AI Agent detected 3 violations requiring clarification',
-      matchInvoice: 'INV-2024-079',
-      timekeepers: [
-        { name: 'Admiral Robert Wilson', role: 'Partner', hours: 55, rate: 900, total: 49500 },
-        { name: 'Captain Lisa Brown', role: 'Senior Associate', hours: 60, rate: 750, total: 45000 },
-        { name: 'Commander David Johnson', role: 'Associate', hours: 50, rate: 650, total: 32500 }
-      ],
-      expenses: [
-        { description: 'Expert Witness', amount: 4000, receipt: true }
-      ],
-      utbmsCodes: [
-        { task: 'L2600', activity: 'A2600', expense: 'E2600', description: 'Maritime Law' }
-      ]
     }
-  ],
-  policyGuidelines: {
-    timeliness: '≤5 days post month-end',
-    capAmount: '$10,000 with pre-approval',
-    narrativeRequirement: 'Detailed narratives required',
-    prohibitedItems: ['Administrative tasks', 'Training activities', 'Non-legal work'],
-    receiptThreshold: 'Receipts required for >$500',
-    travelPolicy: 'Economy flights for <5-hour trips',
-    utbmsRequirement: 'UTBMS codes mandatory',
-    weekendBilling: 'Weekend/holiday billing prohibited'
-  },
-  rateCards: {
-    '2024': {
-      Partner: { standard: 850, max: 950 },
-      Associate: { standard: 650, max: 750 },
-      Paralegal: { standard: 350, max: 450 },
-      'Senior Associate': { standard: 750, max: 850 }
-    },
-    '2023': {
-      Partner: { standard: 800, max: 900 },
-      Associate: { standard: 600, max: 700 },
-      Paralegal: { standard: 320, max: 420 },
-      'Senior Associate': { standard: 700, max: 800 }
-    }
-  }
+  ]
 };
 
 // CSS Animations
@@ -771,9 +442,16 @@ function LegalAndCounselAgentDialog({ open, onClose }) {
   const [analysisSteps, setAnalysisSteps] = useState([]);
   const [selectedInvoiceForAnalysis, setSelectedInvoiceForAnalysis] = useState(null);
   const [showInvoiceAnalysisReport, setShowInvoiceAnalysisReport] = useState(false);
+  const [selectedInvoice, setSelectedInvoice] = useState(null);
+  const [showAttachmentsDialog, setShowAttachmentsDialog] = useState(false);
 
   const handleTabChange = (event, newValue) => {
     setActiveTab(newValue);
+  };
+
+  const handleInvoiceClick = (invoice) => {
+    setSelectedInvoice(invoice);
+    setShowAttachmentsDialog(true);
   };
 
   const startAnalysis = () => {
@@ -2161,9 +1839,91 @@ function LegalAndCounselAgentDialog({ open, onClose }) {
                 {INVOICE_DATA.sampleInvoices.map((invoice) => (
                   <tr key={invoice.id}>
                     <td>
-                      <Typography variant="body2" fontWeight="600" color="primary">
-                        {invoice.invoiceNumber}
-                      </Typography>
+                      <Tooltip
+                        title={
+                          <Box sx={{ p: 1 }}>
+                            <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: 600, color: 'white' }}>
+                              Invoice Attachments
+                            </Typography>
+                            {invoice.attachments && invoice.attachments.length > 0 ? (
+                              <Box>
+                                {invoice.attachments.map((attachment, index) => (
+                                  <Box key={index} sx={{ mb: 1, display: 'flex', alignItems: 'center', gap: 1 }}>
+                                    <Box
+                                      sx={{
+                                        width: 8,
+                                        height: 8,
+                                        borderRadius: '50%',
+                                        backgroundColor: 
+                                          attachment.type === 'PDF' ? '#f44336' :
+                                          attachment.type === 'Excel' ? '#4caf50' :
+                                          attachment.type === 'Word' ? '#2196f3' :
+                                          attachment.type === 'ZIP' ? '#ff9800' : '#9e9e9e'
+                                      }}
+                                    />
+                                    <Typography variant="caption" sx={{ color: 'white', fontWeight: 500 }}>
+                                      {attachment.name}
+                                    </Typography>
+                                    <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.7)', ml: 'auto' }}>
+                                      {attachment.size}
+                                    </Typography>
+                                  </Box>
+                                ))}
+                              </Box>
+                            ) : (
+                              <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.7)' }}>
+                                No attachments available
+                              </Typography>
+                            )}
+                          </Box>
+                        }
+                        arrow
+                        placement="top-start"
+                        PopperProps={{
+                          sx: {
+                            '& .MuiTooltip-tooltip': {
+                              backgroundColor: 'rgba(0,0,0,0.9)',
+                              maxWidth: 400,
+                              fontSize: '0.75rem'
+                            }
+                          }
+                        }}
+                      >
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                          <Typography 
+                            variant="body2" 
+                            fontWeight="600" 
+                            color="primary"
+                            onClick={() => handleInvoiceClick(invoice)}
+                            sx={{ 
+                              cursor: 'pointer',
+                              '&:hover': {
+                                textDecoration: 'underline'
+                              }
+                            }}
+                          >
+                            {invoice.invoiceNumber}
+                          </Typography>
+                          {invoice.attachments && invoice.attachments.length > 0 && (
+                            <Box
+                              sx={{
+                                width: 12,
+                                height: 12,
+                                borderRadius: '50%',
+                                backgroundColor: 'primary.main',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                color: 'white',
+                                fontSize: '0.6rem',
+                                fontWeight: 'bold'
+                              }}
+                            >
+                              {invoice.attachments.length}
+                            </Box>
+                          )}
+                        </Box>
+                      </Tooltip>
                     </td>
                     <td>
                       <Typography variant="body2" fontWeight="500">
@@ -3114,6 +2874,140 @@ function LegalAndCounselAgentDialog({ open, onClose }) {
       
       {/* Invoice Analysis Report */}
       {renderInvoiceAnalysisReport()}
+
+      {/* Invoice Attachments Dialog */}
+      <Dialog
+        open={showAttachmentsDialog}
+        onClose={() => setShowAttachmentsDialog(false)}
+        maxWidth="md"
+        fullWidth
+        PaperProps={{
+          sx: {
+            borderRadius: 2,
+            boxShadow: '0 8px 32px rgba(0,0,0,0.12)'
+          }
+        }}
+      >
+        <DialogTitle sx={{ 
+          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          color: 'white',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center'
+        }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <DescriptionIcon />
+            <Typography variant="h6">
+              Invoice Attachments - {selectedInvoice?.invoiceNumber}
+            </Typography>
+          </Box>
+          <IconButton 
+            onClick={() => setShowAttachmentsDialog(false)} 
+            sx={{ color: 'white' }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        
+        <DialogContent sx={{ p: 3 }}>
+          {selectedInvoice && (
+            <Box>
+              <Box sx={{ mb: 3 }}>
+                <Typography variant="h6" gutterBottom>
+                  {selectedInvoice.firm} - {selectedInvoice.matter}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Invoice #{selectedInvoice.invoiceNumber} • {selectedInvoice.date} • ${selectedInvoice.total.toLocaleString()}
+                </Typography>
+              </Box>
+              
+              <Typography variant="h6" gutterBottom sx={{ mb: 2 }}>
+                Attachments ({selectedInvoice.attachments?.length || 0})
+              </Typography>
+              
+              {selectedInvoice.attachments && selectedInvoice.attachments.length > 0 ? (
+                <Grid container spacing={2}>
+                  {selectedInvoice.attachments.map((attachment, index) => (
+                    <Grid item xs={12} sm={6} md={4} key={index}>
+                      <Card 
+                        sx={{ 
+                          p: 2, 
+                          cursor: 'pointer',
+                          '&:hover': {
+                            boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
+                            transform: 'translateY(-2px)'
+                          },
+                          transition: 'all 0.2s ease-in-out'
+                        }}
+                        onClick={() => window.open(attachment.url, '_blank')}
+                      >
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
+                          <Box
+                            sx={{
+                              width: 40,
+                              height: 40,
+                              borderRadius: 2,
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              backgroundColor: 
+                                attachment.type === 'PDF' ? '#f44336' :
+                                attachment.type === 'Excel' ? '#4caf50' :
+                                attachment.type === 'Word' ? '#2196f3' :
+                                attachment.type === 'ZIP' ? '#ff9800' : '#9e9e9e',
+                              color: 'white',
+                              fontSize: '1.2rem',
+                              fontWeight: 'bold'
+                            }}
+                          >
+                            {attachment.type === 'PDF' ? '📄' :
+                             attachment.type === 'Excel' ? '📊' :
+                             attachment.type === 'Word' ? '📝' :
+                             attachment.type === 'ZIP' ? '📦' : '📎'}
+                          </Box>
+                          <Box sx={{ flex: 1 }}>
+                            <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 0.5 }}>
+                              {attachment.name}
+                            </Typography>
+                            <Typography variant="caption" color="text.secondary">
+                              {attachment.type} • {attachment.size}
+                            </Typography>
+                          </Box>
+                        </Box>
+                        <Button
+                          variant="outlined"
+                          size="small"
+                          fullWidth
+                          startIcon={<DownloadIcon />}
+                          sx={{ mt: 1 }}
+                        >
+                          Download
+                        </Button>
+                      </Card>
+                    </Grid>
+                  ))}
+                </Grid>
+              ) : (
+                <Box sx={{ textAlign: 'center', py: 4 }}>
+                  <DescriptionIcon sx={{ fontSize: 48, color: 'text.secondary', mb: 2 }} />
+                  <Typography variant="h6" color="text.secondary" gutterBottom>
+                    No Attachments Available
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    This invoice doesn't have any supporting documents attached.
+                  </Typography>
+                </Box>
+              )}
+            </Box>
+          )}
+        </DialogContent>
+        
+        <DialogActions sx={{ p: 2, borderTop: 1, borderColor: 'divider' }}>
+          <Button onClick={() => setShowAttachmentsDialog(false)}>
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       <DialogActions sx={{ p: 2, borderTop: 1, borderColor: 'divider' }}>
         <Button onClick={onClose} color="inherit">
