@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { jsPDF } from 'jspdf';
 import {
   Dialog,
   DialogTitle,
@@ -452,6 +453,168 @@ function LegalAndCounselAgentDialog({ open, onClose }) {
   const handleInvoiceClick = (invoice) => {
     setSelectedInvoice(invoice);
     setShowAttachmentsDialog(true);
+  };
+
+  const generateAndDownloadInvoice = (invoice) => {
+    const doc = new jsPDF();
+    
+    // Set document properties
+    doc.setProperties({
+      title: `Invoice ${invoice.invoiceNumber}`,
+      subject: `Legal Services - ${invoice.matter}`,
+      author: invoice.firm,
+      creator: 'CostCare AI System'
+    });
+
+    // Header
+    doc.setFontSize(24);
+    doc.setTextColor(44, 62, 80);
+    doc.text('INVOICE', 105, 30, { align: 'center' });
+    
+    // Company Logo/Header
+    doc.setFontSize(12);
+    doc.setTextColor(52, 73, 94);
+    doc.text('CostCare Legal Services', 20, 50);
+    doc.text('123 Legal Street, Suite 100', 20, 57);
+    doc.text('New York, NY 10001', 20, 64);
+    doc.text('Phone: (555) 123-4567', 20, 71);
+    doc.text('Email: legal@costcare.com', 20, 78);
+
+    // Invoice Details
+    doc.setFontSize(14);
+    doc.setTextColor(44, 62, 80);
+    doc.text('Invoice Details', 20, 100);
+    
+    doc.setFontSize(10);
+    doc.setTextColor(52, 73, 94);
+    doc.text(`Invoice Number: ${invoice.invoiceNumber}`, 20, 110);
+    doc.text(`Date: ${invoice.date}`, 20, 117);
+    doc.text(`Date Received: ${invoice.dateReceived}`, 20, 124);
+    doc.text(`Status: ${invoice.status}`, 20, 131);
+    doc.text(`Risk Score: ${invoice.riskScore}/10`, 20, 138);
+
+    // Client Information
+    doc.setFontSize(14);
+    doc.setTextColor(44, 62, 80);
+    doc.text('Client Information', 20, 160);
+    
+    doc.setFontSize(10);
+    doc.setTextColor(52, 73, 94);
+    doc.text(`Firm: ${invoice.firm}`, 20, 170);
+    doc.text(`Matter: ${invoice.matter}`, 20, 177);
+
+    // Timekeeper Details
+    doc.setFontSize(14);
+    doc.setTextColor(44, 62, 80);
+    doc.text('Timekeeper Details', 20, 200);
+    
+    let yPos = 210;
+    doc.setFontSize(10);
+    doc.setTextColor(52, 73, 94);
+    
+    // Table headers
+    doc.setFillColor(52, 73, 94);
+    doc.setTextColor(255, 255, 255);
+    doc.rect(20, yPos - 5, 170, 8, 'F');
+    doc.text('Name', 25, yPos);
+    doc.text('Role', 70, yPos);
+    doc.text('Hours', 120, yPos);
+    doc.text('Rate', 140, yPos);
+    doc.text('Total', 160, yPos);
+    
+    yPos += 15;
+    doc.setTextColor(52, 73, 94);
+    
+    invoice.timekeepers.forEach((timekeeper) => {
+      doc.text(timekeeper.name, 25, yPos);
+      doc.text(timekeeper.role, 70, yPos);
+      doc.text(timekeeper.hours.toString(), 120, yPos);
+      doc.text(`$${timekeeper.rate}`, 140, yPos);
+      doc.text(`$${timekeeper.total.toLocaleString()}`, 160, yPos);
+      yPos += 10;
+    });
+
+    // Expenses
+    if (invoice.expenses && invoice.expenses.length > 0) {
+      yPos += 10;
+      doc.setFontSize(14);
+      doc.setTextColor(44, 62, 80);
+      doc.text('Expenses', 20, yPos);
+      
+      yPos += 10;
+      doc.setFontSize(10);
+      doc.setTextColor(52, 73, 94);
+      
+      // Expense table headers
+      doc.setFillColor(52, 73, 94);
+      doc.setTextColor(255, 255, 255);
+      doc.rect(20, yPos - 5, 170, 8, 'F');
+      doc.text('Description', 25, yPos);
+      doc.text('Amount', 140, yPos);
+      doc.text('Receipt', 160, yPos);
+      
+      yPos += 15;
+      doc.setTextColor(52, 73, 94);
+      
+      invoice.expenses.forEach((expense) => {
+        doc.text(expense.description, 25, yPos);
+        doc.text(`$${expense.amount.toLocaleString()}`, 140, yPos);
+        doc.text(expense.receipt ? 'Yes' : 'No', 160, yPos);
+        yPos += 10;
+      });
+    }
+
+    // UTBMS Codes
+    if (invoice.utbmsCodes && invoice.utbmsCodes.length > 0) {
+      yPos += 10;
+      doc.setFontSize(14);
+      doc.setTextColor(44, 62, 80);
+      doc.text('UTBMS Codes', 20, yPos);
+      
+      yPos += 10;
+      doc.setFontSize(10);
+      doc.setTextColor(52, 73, 94);
+      
+      invoice.utbmsCodes.forEach((code) => {
+        doc.text(`${code.task}-${code.activity}-${code.expense}: ${code.description}`, 25, yPos);
+        yPos += 8;
+      });
+    }
+
+    // AI Analysis Summary
+    yPos += 10;
+    doc.setFontSize(14);
+    doc.setTextColor(44, 62, 80);
+    doc.text('AI Analysis Summary', 20, yPos);
+    
+    yPos += 10;
+    doc.setFontSize(10);
+    doc.setTextColor(52, 73, 94);
+    doc.text(`Agent Analysis: ${invoice.agentAnalysis}`, 25, yPos);
+    yPos += 8;
+    doc.text(`Anomalies Detected: ${invoice.anomalies}`, 25, yPos);
+    yPos += 8;
+    doc.text(`Risk Score: ${invoice.riskScore}/10`, 25, yPos);
+    yPos += 8;
+    doc.text(`Remarks: ${invoice.remarks}`, 25, yPos);
+
+    // Total Amount
+    yPos += 15;
+    doc.setFontSize(16);
+    doc.setTextColor(44, 62, 80);
+    doc.text('Total Amount', 140, yPos);
+    doc.setFontSize(18);
+    doc.setTextColor(231, 76, 60);
+    doc.text(`$${invoice.total.toLocaleString()}`, 140, yPos + 10);
+
+    // Footer
+    doc.setFontSize(8);
+    doc.setTextColor(149, 165, 166);
+    doc.text('Generated by CostCare AI System', 105, 280, { align: 'center' });
+    doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 105, 285, { align: 'center' });
+
+    // Save the PDF
+    doc.save(`Invoice_${invoice.invoiceNumber}_${invoice.firm.replace(/\s+/g, '_')}.pdf`);
   };
 
   const startAnalysis = () => {
@@ -2070,6 +2233,24 @@ function LegalAndCounselAgentDialog({ open, onClose }) {
                           >
                             <AutoFixHighIcon fontSize="small" />
                           </IconButton>
+                          <IconButton 
+                            size="small" 
+                            color="info" 
+                            title="Download Invoice PDF"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              generateAndDownloadInvoice(invoice);
+                            }}
+                            sx={{ 
+                              background: 'linear-gradient(135deg, #3498db 0%, #2980b9 100%)',
+                              color: 'white',
+                              '&:hover': {
+                                background: 'linear-gradient(135deg, #2980b9 0%, #1f5f8b 100%)'
+                              }
+                            }}
+                          >
+                            <DownloadIcon fontSize="small" />
+                          </IconButton>
                           <IconButton size="small" color="success" title="Approve">
                             <CheckCircleIcon fontSize="small" />
                           </IconButton>
@@ -2901,12 +3082,27 @@ function LegalAndCounselAgentDialog({ open, onClose }) {
               Invoice Attachments - {selectedInvoice?.invoiceNumber}
             </Typography>
           </Box>
-          <IconButton 
-            onClick={() => setShowAttachmentsDialog(false)} 
-            sx={{ color: 'white' }}
-          >
-            <CloseIcon />
-          </IconButton>
+          <Box sx={{ display: 'flex', gap: 1 }}>
+            <IconButton 
+              title="Download Invoice PDF"
+              onClick={() => generateAndDownloadInvoice(selectedInvoice)}
+              sx={{ 
+                color: 'white',
+                background: 'rgba(255,255,255,0.1)',
+                '&:hover': {
+                  background: 'rgba(255,255,255,0.2)'
+                }
+              }}
+            >
+              <DownloadIcon />
+            </IconButton>
+            <IconButton 
+              onClick={() => setShowAttachmentsDialog(false)} 
+              sx={{ color: 'white' }}
+            >
+              <CloseIcon />
+            </IconButton>
+          </Box>
         </DialogTitle>
         
         <DialogContent sx={{ p: 3 }}>
@@ -2979,9 +3175,10 @@ function LegalAndCounselAgentDialog({ open, onClose }) {
                           size="small"
                           fullWidth
                           startIcon={<DownloadIcon />}
+                          onClick={() => generateAndDownloadInvoice(selectedInvoice)}
                           sx={{ mt: 1 }}
                         >
-                          Download
+                          Download Invoice
                         </Button>
                       </Card>
                     </Grid>
