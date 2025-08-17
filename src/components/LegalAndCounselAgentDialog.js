@@ -28,6 +28,13 @@ import {
   Select,
   MenuItem,
   Tooltip,
+  Divider,
+  Switch,
+  FormControlLabel,
+  TextareaAutosize,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
 } from '@mui/material';
 import {
   Gavel as GavelIcon,
@@ -45,6 +52,13 @@ import {
   Close as CloseIcon,
   CloudUpload as UploadIcon,
   Download as DownloadIcon,
+  Person as PersonIcon,
+  Edit as EditIcon,
+  Save as SaveIcon,
+  Cancel as CancelIcon,
+  ExpandMore as ExpandMoreIcon,
+  Assignment as AssignmentIcon,
+  Timeline as TimelineIcon,
 } from '@mui/icons-material';
 
 // Mock data for legal and counsel analysis
@@ -132,6 +146,31 @@ const INVOICE_DATA = {
       mismatchDescription: 'Partner rate exceeds contracted rate by $50/hour',
       agentAnalysis: 'AI Agent detected 3 compliance violations',
       matchInvoice: 'INV-2024-015',
+      humanIntervention: {
+        required: true,
+        type: 'Rate Dispute',
+        priority: 'High',
+        assignedTo: 'Legal Team Lead',
+        deadline: '2024-03-25',
+        status: 'Pending Review',
+        notes: 'Partner rate exceeds contracted rate. Need legal team to review contract terms and negotiate with firm.',
+        manualCorrections: [
+          {
+            field: 'Partner Rate',
+            originalValue: '$850/hour',
+            proposedValue: '$800/hour',
+            justification: 'Contract specifies $800/hour for partner work',
+            requiresApproval: true
+          },
+          {
+            field: 'Research Database Expense',
+            originalValue: '$1,200',
+            proposedValue: '$0',
+            justification: 'Missing receipt - cannot verify expense legitimacy',
+            requiresApproval: false
+          }
+        ]
+      },
       attachments: [
         { name: 'Invoice_2024-001.pdf', type: 'PDF', size: '2.3 MB', url: '#invoice-001' },
         { name: 'Supporting_Docs_001.zip', type: 'ZIP', size: '15.7 MB', url: '#docs-001' },
@@ -204,6 +243,38 @@ const INVOICE_DATA = {
       mismatchDescription: 'Weekend billing detected, missing UTBMS codes',
       agentAnalysis: 'AI Agent flagged 5 critical compliance issues',
       matchInvoice: 'INV-2024-022',
+      humanIntervention: {
+        required: true,
+        type: 'Weekend Billing & UTBMS Issues',
+        priority: 'Critical',
+        assignedTo: 'Compliance Manager',
+        deadline: '2024-03-22',
+        status: 'In Progress',
+        notes: 'Weekend billing requires special approval. UTBMS codes need manual verification and correction.',
+        manualCorrections: [
+          {
+            field: 'Weekend Hours',
+            originalValue: '12 hours (Saturday/Sunday)',
+            proposedValue: '8 hours (Saturday only)',
+            justification: 'Sunday billing not approved. Saturday hours need justification.',
+            requiresApproval: true
+          },
+          {
+            field: 'UTBMS Codes',
+            originalValue: 'Missing for 3 line items',
+            proposedValue: 'L700-A700-E700 for all items',
+            justification: 'Standard employment law coding required',
+            requiresApproval: false
+          },
+          {
+            field: 'Expert Consultation Fee',
+            originalValue: '$78,000',
+            proposedValue: '$65,000',
+            justification: 'Fee exceeds approved budget by $13,000',
+            requiresApproval: true
+          }
+        ]
+      },
       attachments: [
         { name: 'Invoice_2024-003.pdf', type: 'PDF', size: '2.1 MB', url: '#invoice-003' },
         { name: 'Employment_Records_003.pdf', type: 'PDF', size: '12.3 MB', url: '#records-003' },
@@ -396,6 +467,31 @@ const INVOICE_DATA = {
       mismatchDescription: 'Weekend and holiday billing detected',
       agentAnalysis: 'AI Agent flagged billing policy violations',
       matchInvoice: 'INV-2024-040',
+      humanIntervention: {
+        required: true,
+        type: 'Holiday Billing & Software Expense',
+        priority: 'Medium',
+        assignedTo: 'Finance Director',
+        deadline: '2024-03-28',
+        status: 'Pending Review',
+        notes: 'Holiday billing needs executive approval. Software expense requires budget verification.',
+        manualCorrections: [
+          {
+            field: 'Holiday Hours',
+            originalValue: '16 hours (Christmas Eve/Day)',
+            proposedValue: '8 hours (Christmas Eve only)',
+            justification: 'Christmas Day billing not approved. Christmas Eve hours need justification.',
+            requiresApproval: true
+          },
+          {
+            field: 'Financial Analysis Software',
+            originalValue: '$47,200',
+            proposedValue: '$35,000',
+            justification: 'Software cost exceeds approved budget. Need to negotiate with vendor.',
+            requiresApproval: true
+          }
+        ]
+      },
       attachments: [
         { name: 'Invoice_2024-009.pdf', type: 'PDF', size: '3.2 MB', url: '#invoice-009' },
         { name: 'SEC_Investigation_009.pdf', type: 'PDF', size: '45.8 MB', url: '#sec-009' },
@@ -445,6 +541,11 @@ function LegalAndCounselAgentDialog({ open, onClose }) {
   const [showInvoiceAnalysisReport, setShowInvoiceAnalysisReport] = useState(false);
   const [selectedInvoice, setSelectedInvoice] = useState(null);
   const [showAttachmentsDialog, setShowAttachmentsDialog] = useState(false);
+  const [showHumanInterventionDialog, setShowHumanInterventionDialog] = useState(false);
+  const [selectedInterventionInvoice, setSelectedInterventionInvoice] = useState(null);
+  const [interventionNotes, setInterventionNotes] = useState('');
+  const [correctionApprovals, setCorrectionApprovals] = useState({});
+  const [isProcessingIntervention, setIsProcessingIntervention] = useState(false);
 
   const handleTabChange = (event, newValue) => {
     setActiveTab(newValue);
@@ -453,6 +554,40 @@ function LegalAndCounselAgentDialog({ open, onClose }) {
   const handleInvoiceClick = (invoice) => {
     setSelectedInvoice(invoice);
     setShowAttachmentsDialog(true);
+  };
+
+  const handleHumanInterventionClick = (invoice) => {
+    setSelectedInterventionInvoice(invoice);
+    setInterventionNotes(invoice.humanIntervention?.notes || '');
+    setCorrectionApprovals({});
+    setShowHumanInterventionDialog(true);
+  };
+
+  const handleProcessIntervention = () => {
+    setIsProcessingIntervention(true);
+    
+    // Simulate processing time
+    setTimeout(() => {
+      setIsProcessingIntervention(false);
+      setShowHumanInterventionDialog(false);
+      
+      // Update the invoice status
+      if (selectedInterventionInvoice) {
+        const updatedInvoice = {
+          ...selectedInterventionInvoice,
+          humanIntervention: {
+            ...selectedInterventionInvoice.humanIntervention,
+            status: 'Completed',
+            completedDate: new Date().toISOString().split('T')[0],
+            completedBy: 'Current User',
+            finalNotes: interventionNotes
+          }
+        };
+        
+        // In a real app, you would update the invoice in your data store
+        console.log('Human intervention completed:', updatedInvoice);
+      }
+    }, 2000);
   };
 
   const generateAndDownloadInvoice = (invoice) => {
@@ -1337,6 +1472,36 @@ function LegalAndCounselAgentDialog({ open, onClose }) {
         External Counsel Invoice Checker
       </Typography>
       
+      {/* Human Intervention Summary */}
+      {INVOICE_DATA.sampleInvoices.filter(inv => inv.humanIntervention?.required).length > 0 && (
+        <Card sx={{ mb: 4, background: 'linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%)', border: '2px solid #ff9800' }}>
+          <CardContent>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+              <PersonIcon sx={{ fontSize: 32, color: '#ff9800' }} />
+              <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#e65100' }}>
+                Human Intervention Required
+              </Typography>
+            </Box>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+              {INVOICE_DATA.sampleInvoices.filter(inv => inv.humanIntervention?.required).length} invoices require manual review and correction. 
+              These cases cannot be fully automated and need human expertise to resolve compliance issues.
+            </Typography>
+            <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+              {INVOICE_DATA.sampleInvoices.filter(inv => inv.humanIntervention?.required).map((invoice) => (
+                <Chip
+                  key={invoice.id}
+                  label={`${invoice.invoiceNumber} - ${invoice.humanIntervention.type}`}
+                  color="warning"
+                  variant="outlined"
+                  onClick={() => handleHumanInterventionClick(invoice)}
+                  sx={{ cursor: 'pointer', fontWeight: 'bold' }}
+                />
+              ))}
+            </Box>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Invoice Upload Section */}
       <Card sx={{ mb: 4 }}>
         <CardContent>
@@ -1387,7 +1552,7 @@ function LegalAndCounselAgentDialog({ open, onClose }) {
 
       {/* Invoice Summary Cards */}
       <Grid container spacing={3} sx={{ mb: 4 }}>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid item xs={12} sm={6} md={2}>
           <Card sx={{ 
             background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
             color: 'white'
@@ -1403,7 +1568,7 @@ function LegalAndCounselAgentDialog({ open, onClose }) {
           </Card>
         </Grid>
         
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid item xs={12} sm={6} md={2}>
           <Card sx={{ 
             background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
             color: 'white'
@@ -1419,7 +1584,7 @@ function LegalAndCounselAgentDialog({ open, onClose }) {
           </Card>
         </Grid>
         
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid item xs={12} sm={6} md={2}>
           <Card sx={{ 
             background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
             color: 'white'
@@ -1435,7 +1600,7 @@ function LegalAndCounselAgentDialog({ open, onClose }) {
           </Card>
         </Grid>
         
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid item xs={12} sm={6} md={2}>
           <Card sx={{ 
             background: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
             color: 'white'
@@ -1446,6 +1611,22 @@ function LegalAndCounselAgentDialog({ open, onClose }) {
               </Typography>
               <Typography variant="body2" sx={{ opacity: 0.9 }}>
                 Avg Processing Time
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+
+        <Grid item xs={12} sm={6} md={2}>
+          <Card sx={{ 
+            background: 'linear-gradient(135deg, #ff9800 0%, #f57c00 100%)',
+            color: 'white'
+          }}>
+            <CardContent>
+              <Typography variant="h4" sx={{ mb: 1 }}>
+                {INVOICE_DATA.sampleInvoices.filter(inv => inv.humanIntervention?.required).length}
+              </Typography>
+              <Typography variant="body2" sx={{ opacity: 0.9 }}>
+                Human Interventions
               </Typography>
             </CardContent>
           </Card>
@@ -1945,6 +2126,14 @@ function LegalAndCounselAgentDialog({ open, onClose }) {
                 <MenuItem value="high">High (7-10)</MenuItem>
               </Select>
             </FormControl>
+            <FormControl size="small" sx={{ minWidth: 180 }}>
+              <InputLabel>Intervention Type</InputLabel>
+              <Select label="Intervention Type" defaultValue="all">
+                <MenuItem value="all">All Invoices</MenuItem>
+                <MenuItem value="human">Human Intervention Required</MenuItem>
+                <MenuItem value="automated">Automated Processing</MenuItem>
+              </Select>
+            </FormControl>
             <Button variant="outlined" size="small" startIcon={<AutoFixHighIcon />}>
               Export Data
             </Button>
@@ -1995,12 +2184,19 @@ function LegalAndCounselAgentDialog({ open, onClose }) {
                   <th>Mismatch Description</th>
                   <th>Agent Analysis</th>
                   <th>Match Invoice</th>
+                  <th>Human Intervention</th>
                   <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {INVOICE_DATA.sampleInvoices.map((invoice) => (
-                  <tr key={invoice.id}>
+                  <tr 
+                    key={invoice.id}
+                    style={{
+                      backgroundColor: invoice.humanIntervention?.required ? 'rgba(255, 152, 0, 0.05)' : 'inherit',
+                      borderLeft: invoice.humanIntervention?.required ? '4px solid #ff9800' : 'inherit',
+                    }}
+                  >
                     <td>
                       <Tooltip
                         title={
@@ -2212,6 +2408,41 @@ function LegalAndCounselAgentDialog({ open, onClose }) {
                       <Typography variant="body2" color="primary" fontWeight="500">
                         {invoice.matchInvoice}
                       </Typography>
+                    </td>
+                    <td>
+                      {invoice.humanIntervention?.required ? (
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                          <Chip 
+                            label="Required" 
+                            size="small" 
+                            color="warning" 
+                            icon={<PersonIcon />}
+                            sx={{ fontWeight: 'bold' }}
+                          />
+                          <IconButton 
+                            size="small" 
+                            color="warning" 
+                            title="Process Human Intervention"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleHumanInterventionClick(invoice);
+                            }}
+                            sx={{ 
+                              background: 'linear-gradient(135deg, #ff9800 0%, #f57c00 100%)',
+                              color: 'white',
+                              '&:hover': {
+                                background: 'linear-gradient(135deg, #f57c00 0%, #ef6c00 100%)'
+                              }
+                            }}
+                          >
+                            <AssignmentIcon fontSize="small" />
+                          </IconButton>
+                        </Box>
+                      ) : (
+                        <Typography variant="body2" color="success.main" sx={{ fontStyle: 'italic' }}>
+                          ✓ Automated
+                        </Typography>
+                      )}
                     </td>
                     <td>
                                               <Box sx={{ display: 'flex', gap: 0.5 }}>
@@ -3203,6 +3434,354 @@ function LegalAndCounselAgentDialog({ open, onClose }) {
           <Button onClick={() => setShowAttachmentsDialog(false)}>
             Close
           </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Human Intervention Dialog */}
+      <Dialog
+        open={showHumanInterventionDialog}
+        onClose={() => setShowHumanInterventionDialog(false)}
+        maxWidth="lg"
+        fullWidth
+        PaperProps={{
+          sx: {
+            borderRadius: 3,
+            boxShadow: '0 12px 40px rgba(0,0,0,0.15)',
+            maxHeight: '90vh'
+          }
+        }}
+      >
+        <DialogTitle sx={{ 
+          background: 'linear-gradient(135deg, #ff9800 0%, #f57c00 100%)',
+          color: 'white',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center'
+        }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <PersonIcon sx={{ fontSize: 28 }} />
+            <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
+              Human Intervention Required
+            </Typography>
+          </Box>
+          <IconButton 
+            onClick={() => setShowHumanInterventionDialog(false)} 
+            sx={{ color: 'white' }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        
+        <DialogContent sx={{ p: 0 }}>
+          {selectedInterventionInvoice && (
+            <Box>
+              {/* Invoice Summary Header */}
+              <Box sx={{ p: 3, background: 'rgba(255,152,0,0.1)' }}>
+                <Card sx={{ 
+                  background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                  color: 'white',
+                  borderRadius: 2
+                }}>
+                  <CardContent>
+                    <Grid container spacing={3} alignItems="center">
+                      <Grid item xs={12} md={8}>
+                        <Typography variant="h6" gutterBottom>
+                          📋 Invoice Requiring Human Review
+                        </Typography>
+                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                          <Typography variant="body2">
+                            <strong>Firm:</strong> {selectedInterventionInvoice.firm}
+                          </Typography>
+                          <Typography variant="body2">
+                            <strong>Matter:</strong> {selectedInterventionInvoice.matter}
+                          </Typography>
+                          <Typography variant="body2">
+                            <strong>Invoice #:</strong> {selectedInterventionInvoice.invoiceNumber}
+                          </Typography>
+                          <Typography variant="body2">
+                            <strong>Total Amount:</strong> ${selectedInterventionInvoice.total.toLocaleString()}
+                          </Typography>
+                        </Box>
+                      </Grid>
+                      <Grid item xs={12} md={4}>
+                        <Box sx={{ textAlign: 'center' }}>
+                          <Chip 
+                            label={selectedInterventionInvoice.humanIntervention.priority} 
+                            size="large"
+                            color={selectedInterventionInvoice.humanIntervention.priority === 'Critical' ? 'error' : 
+                                   selectedInterventionInvoice.humanIntervention.priority === 'High' ? 'warning' : 'info'}
+                            sx={{ fontWeight: 'bold', mb: 2 }}
+                          />
+                          <Typography variant="body2" sx={{ opacity: 0.9 }}>
+                            Priority Level
+                          </Typography>
+                        </Box>
+                      </Grid>
+                    </Grid>
+                  </CardContent>
+                </Card>
+              </Box>
+
+              {/* Intervention Details */}
+              <Box sx={{ p: 3 }}>
+                <Grid container spacing={3}>
+                  {/* Left Column - Intervention Info */}
+                  <Grid item xs={12} lg={6}>
+                    <Card sx={{ 
+                      background: 'linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)',
+                      borderRadius: 2,
+                      height: '100%'
+                    }}>
+                      <CardContent>
+                        <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold', color: '#d32f2f' }}>
+                          🚨 Intervention Details
+                        </Typography>
+                        
+                        <Box sx={{ mb: 3 }}>
+                          <Typography variant="subtitle2" sx={{ fontWeight: 'bold', mb: 1 }}>
+                            Type of Intervention:
+                          </Typography>
+                          <Chip 
+                            label={selectedInterventionInvoice.humanIntervention.type} 
+                            color="warning" 
+                            variant="outlined"
+                            sx={{ fontWeight: 'bold' }}
+                          />
+                        </Box>
+
+                        <Box sx={{ mb: 3 }}>
+                          <Typography variant="subtitle2" sx={{ fontWeight: 'bold', mb: 1 }}>
+                            Assigned To:
+                          </Typography>
+                          <Typography variant="body2" sx={{ fontWeight: '500' }}>
+                            {selectedInterventionInvoice.humanIntervention.assignedTo}
+                          </Typography>
+                        </Box>
+
+                        <Box sx={{ mb: 3 }}>
+                          <Typography variant="subtitle2" sx={{ fontWeight: 'bold', mb: 1 }}>
+                            Deadline:
+                          </Typography>
+                          <Typography variant="body2" sx={{ 
+                            fontWeight: '500',
+                            color: new Date(selectedInterventionInvoice.humanIntervention.deadline) < new Date() ? 'error.main' : 'text.primary'
+                          }}>
+                            {selectedInterventionInvoice.humanIntervention.deadline}
+                            {new Date(selectedInterventionInvoice.humanIntervention.deadline) < new Date() && (
+                              <Chip 
+                                label="OVERDUE" 
+                                size="small" 
+                                color="error" 
+                                sx={{ ml: 1, fontWeight: 'bold' }}
+                              />
+                            )}
+                          </Typography>
+                        </Box>
+
+                        <Box sx={{ mb: 3 }}>
+                          <Typography variant="subtitle2" sx={{ fontWeight: 'bold', mb: 1 }}>
+                            Current Status:
+                          </Typography>
+                          <Chip 
+                            label={selectedInterventionInvoice.humanIntervention.status} 
+                            color={
+                              selectedInterventionInvoice.humanIntervention.status === 'Completed' ? 'success' :
+                              selectedInterventionInvoice.humanIntervention.status === 'In Progress' ? 'warning' : 'info'
+                            }
+                            sx={{ fontWeight: 'bold' }}
+                          />
+                        </Box>
+
+                        <Box sx={{ mb: 3 }}>
+                          <Typography variant="subtitle2" sx={{ fontWeight: 'bold', mb: 1 }}>
+                            Notes:
+                          </Typography>
+                          <TextareaAutosize
+                            minRows={3}
+                            maxRows={6}
+                            value={interventionNotes}
+                            onChange={(e) => setInterventionNotes(e.target.value)}
+                            placeholder="Add your notes and observations here..."
+                            style={{
+                              width: '100%',
+                              padding: '12px',
+                              border: '1px solid #ccc',
+                              borderRadius: '4px',
+                              fontFamily: 'inherit',
+                              fontSize: '14px',
+                              resize: 'vertical'
+                            }}
+                          />
+                        </Box>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+
+                  {/* Right Column - Manual Corrections */}
+                  <Grid item xs={12} lg={6}>
+                    <Card sx={{ 
+                      background: 'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)',
+                      borderRadius: 2,
+                      height: '100%'
+                    }}>
+                      <CardContent>
+                        <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold', color: '#1976d2' }}>
+                          ✏️ Manual Corrections Required
+                        </Typography>
+                        
+                        <Box sx={{ maxHeight: '400px', overflow: 'auto' }}>
+                          {selectedInterventionInvoice.humanIntervention.manualCorrections.map((correction, index) => (
+                            <Accordion key={index} sx={{ mb: 2, background: 'rgba(255,255,255,0.8)' }}>
+                              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, width: '100%' }}>
+                                  <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>
+                                    {correction.field}
+                                  </Typography>
+                                  {correction.requiresApproval && (
+                                    <Chip 
+                                      label="Approval Required" 
+                                      size="small" 
+                                      color="warning" 
+                                      variant="outlined"
+                                    />
+                                  )}
+                                </Box>
+                              </AccordionSummary>
+                              <AccordionDetails>
+                                <Box sx={{ mb: 2 }}>
+                                  <Typography variant="body2" sx={{ fontWeight: 'bold', mb: 1 }}>
+                                    Original Value:
+                                  </Typography>
+                                  <Typography variant="body2" sx={{ color: 'error.main', fontStyle: 'italic' }}>
+                                    {correction.originalValue}
+                                  </Typography>
+                                </Box>
+                                
+                                <Box sx={{ mb: 2 }}>
+                                  <Typography variant="body2" sx={{ fontWeight: 'bold', mb: 1 }}>
+                                    Proposed Value:
+                                  </Typography>
+                                  <Typography variant="body2" sx={{ color: 'success.main', fontStyle: 'italic' }}>
+                                    {correction.proposedValue}
+                                  </Typography>
+                                </Box>
+                                
+                                <Box sx={{ mb: 2 }}>
+                                  <Typography variant="body2" sx={{ fontWeight: 'bold', mb: 1 }}>
+                                    Justification:
+                                  </Typography>
+                                  <Typography variant="body2" sx={{ fontStyle: 'italic' }}>
+                                    {correction.justification}
+                                  </Typography>
+                                </Box>
+
+                                {correction.requiresApproval && (
+                                  <Box sx={{ mb: 2 }}>
+                                    <FormControlLabel
+                                      control={
+                                        <Switch
+                                          checked={correctionApprovals[index] || false}
+                                          onChange={(e) => setCorrectionApprovals({
+                                            ...correctionApprovals,
+                                            [index]: e.target.checked
+                                          })}
+                                          color="primary"
+                                        />
+                                      }
+                                      label="Approve this correction"
+                                    />
+                                  </Box>
+                                )}
+                              </AccordionDetails>
+                            </Accordion>
+                          ))}
+                        </Box>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                </Grid>
+
+                {/* Action Timeline */}
+                <Grid container spacing={3} sx={{ mt: 3 }}>
+                  <Grid item xs={12}>
+                    <Card sx={{ 
+                      background: 'linear-gradient(135deg, #d299c2 0%, #fef9d7 100%)',
+                      borderRadius: 2
+                    }}>
+                      <CardContent>
+                        <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold', color: '#1976d2' }}>
+                          📅 Action Timeline
+                        </Typography>
+                        
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                          <TimelineIcon color="primary" />
+                          <Typography variant="body2" sx={{ fontWeight: '500' }}>
+                            This intervention was created on {selectedInterventionInvoice.humanIntervention.deadline}
+                          </Typography>
+                        </Box>
+                        
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                          <AssignmentIcon color="warning" />
+                          <Typography variant="body2" sx={{ fontWeight: '500' }}>
+                            Assigned to {selectedInterventionInvoice.humanIntervention.assignedTo}
+                          </Typography>
+                        </Box>
+                        
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                          <WarningIcon color="error" />
+                          <Typography variant="body2" sx={{ fontWeight: '500' }}>
+                            Due by {selectedInterventionInvoice.humanIntervention.deadline}
+                          </Typography>
+                        </Box>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                </Grid>
+              </Box>
+            </Box>
+          )}
+        </DialogContent>
+        
+        <DialogActions sx={{ p: 3, background: 'rgba(255,255,255,0.9)', borderTop: 1, borderColor: 'divider' }}>
+          <Box sx={{ display: 'flex', gap: 2, justifyContent: 'space-between', width: '100%' }}>
+            <Button 
+              onClick={() => setShowHumanInterventionDialog(false)}
+              variant="outlined"
+              color="inherit"
+            >
+              Cancel
+            </Button>
+            
+            <Box sx={{ display: 'flex', gap: 2 }}>
+              <Button 
+                variant="outlined" 
+                color="primary"
+                startIcon={<SaveIcon />}
+              >
+                Save Draft
+              </Button>
+              <Button 
+                variant="contained" 
+                color="success"
+                startIcon={<CheckCircleIcon />}
+                onClick={handleProcessIntervention}
+                disabled={isProcessingIntervention}
+                sx={{ 
+                  background: 'linear-gradient(135deg, #4caf50 0%, #8bc34a 100%)',
+                  '&:hover': { background: 'linear-gradient(135deg, #45a049 0%, #7cb342 100%)' }
+                }}
+              >
+                {isProcessingIntervention ? (
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <CircularProgress size={16} color="inherit" />
+                    Processing...
+                  </Box>
+                ) : (
+                  'Complete Intervention'
+                )}
+              </Button>
+            </Box>
+          </Box>
         </DialogActions>
       </Dialog>
 
